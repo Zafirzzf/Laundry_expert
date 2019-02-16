@@ -3,10 +3,11 @@
 class Customer {
   String name;
   String phoneNum;
-
-  Customer({String name, String phoneNum}) {
+  String id = '';
+  Customer({String name, String phoneNum, String id}) {
     this.name = name;
     this.phoneNum = phoneNum;
+    this.id = id;
   }
 
   static List<Customer> testDatas() {

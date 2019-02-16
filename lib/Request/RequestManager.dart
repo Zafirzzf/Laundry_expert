@@ -19,6 +19,7 @@ class RequestManager {
      await client.post(host + urlPath, body: parame).then((response) {
        if (response.statusCode != 200) {
           // 服务请求出错
+         print('服务器请求出错: ${response.statusCode}');
        } else {
          Map<String, dynamic> result = json.decode(response.body);
          print("请求回调: ${urlPath} ${result}");

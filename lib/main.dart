@@ -34,9 +34,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   setRootWidget() async {
-    final isLogin = await Preferences.isLogin();
     final token = await Preferences.getToken();
-    ShopInfo.shared.token = token;
+    if (token != null) {
+      ShopInfo.shared.token = token;
+    }
+    final isLogin = ShopInfo.isLogin();
     if (isLogin) {
       rootWidget = HomeScreen();
     } else {

@@ -8,15 +8,6 @@ class Preferences {
     return await SharedPreferences.getInstance();
   }
 
-  static Future<bool> isLogin() async {
-    final prf = await shared();
-    return prf.getBool('isLogin') ?? false;
-  }
-
-  static setLoginState(bool isLogin) async {
-    _saveNewValue('isLogin', isLogin);
-  }
-
   static Future<String> getToken() async {
     final prf =  await shared();
     return prf.getString('token') ?? '';

@@ -1,8 +1,8 @@
 
 class ShopInfo {
-  static ShopInfo shared;
+  static ShopInfo shared = ShopInfo();
   String name;
-  String token;
+  String token = '';
   static bool isLogin() {
     if (ShopInfo.shared == null) {
       return false;

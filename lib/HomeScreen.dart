@@ -5,6 +5,8 @@ import 'package:laundry_expert/UI/MyColors.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/InputCustomerScreen.dart';
+import 'package:laundry_expert/CustomersScreen.dart';
+import 'package:laundry_expert/Request/APIs.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -24,7 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _clickFindCustomer() {
-
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+      return CustomersScreen();
+    }));
   }
 
   _clickClothesStore() {
@@ -66,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 65,
               child: CommonBigButton(
                 title: '衣库',
-                onPressed: _clickFindCustomer,
+                onPressed: _clickClothesStore,
                 backColor: Colors.blue,
               ),
             ),
