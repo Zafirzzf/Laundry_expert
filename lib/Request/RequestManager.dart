@@ -2,17 +2,33 @@
 import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:laundry_expert/Model/ShopInfo.dart';
+
+typedef MapCallback = void Function(Map<String, dynamic> map);
+typedef StringCallback = void Function(String str);
 
 class RequestManager {
   static final Client client = Client();
-  
-  static Future<Map<String, dynamic>> post(String url, Map<String, dynamic> parame) async {
-    final res = await client.post(url, body: parame);
-    if (res.statusCode != 200) {
-
-    } else {
-      Map<String, dynamic> result = json.decode(res.body);
-      return result;
-    }
+  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
+  static post({
+      String urlPath, Map<String, dynamic> parame,
+      MapCallback dataCallback,
+      StringCallback errorCallback
+      }) async {
+     parame['token'] = ShopInfo.shared.token;
+     await client.post(host + urlPath, body: parame).then((response) {
+       if (response.statusCode != 200) {
+          // 服务请求出错
+       } else {
+         Map<String, dynamic> result = json.decode(response.body);
+         print("请求回调: ${urlPath} ${result}");
+         final ret = result['ret'];
+         if (ret == "0") {
+           dataCallback(result['data']);
+         } else {
+           errorCallback(result['ret']);
+         }
+       }
+     });
   }
 }

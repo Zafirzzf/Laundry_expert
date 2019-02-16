@@ -175,7 +175,7 @@ class LoadingDialog extends Dialog {
     );
   }
   
-  hide(BuildContext context) {
+  static hide(BuildContext context) {
     Navigator.pop(context);
   }
 
@@ -220,8 +220,8 @@ class TextDialog extends Dialog {
   }
 
   String text;
-  VoidCallback dismissed;
-  TextDialog(String text, VoidCallback dismissed) {
+  VoidCallback dismissed = () {};
+  TextDialog({String text, VoidCallback dismissed }) {
     this.text = text;
     this.dismissed = dismissed;
   }

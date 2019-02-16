@@ -4,6 +4,7 @@ import 'package:laundry_expert/HomeScreen.dart';
 import 'package:laundry_expert/LoginScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:laundry_expert/Tool/Preferences.dart';
+import 'package:laundry_expert/Model/ShopInfo.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,15 +20,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    const MethodChannel('plugins.flutter.io/shared_preferences')
-        .setMockMethodCallHandler((MethodCall methodCall) async {
-      if (methodCall.method == 'getAll') {
-        return <String, dynamic>{}; // set initial values here if desired
-      }
-      return null;
-    });
     setRootWidget();
-
   }
   @override
   Widget build(BuildContext context) {
@@ -42,10 +35,16 @@ class _MyAppState extends State<MyApp> {
 
   setRootWidget() async {
     final isLogin = await Preferences.isLogin();
+    final token = await Preferences.getToken();
+    ShopInfo.shared.token = token;
     if (isLogin) {
       rootWidget = HomeScreen();
     } else {
-      rootWidget = LoginScreen();
+      rootWidget = LoginScreen(() {
+        // 登录成功回调
+        rootWidget = HomeScreen();
+        setState(() {});
+      });
     }
     setState(() {});
   }
