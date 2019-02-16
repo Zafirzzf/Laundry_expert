@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
+import 'package:laundry_expert/UI/Styles.dart';
+import 'package:laundry_expert/UI/Dialogs.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -14,7 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _pwdInput = TextEditingController();
 
   _clickLogin() {
-
+      TextDialog('登录成功',  () {
+        LoadingDialog.shared.show(context);
+      }).show(context);
   }
   @override
   Widget build(BuildContext context) {
@@ -25,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Text('洗衣专家系统', style: Styles.mediumFont(30, Colors.blue)),
+              const SizedBox(height: 50),
               TextField(
                 controller: _usernameInput,
                 decoration: InputDecoration(

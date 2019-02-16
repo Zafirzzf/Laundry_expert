@@ -6,6 +6,7 @@ import 'package:laundry_expert/UI/MyColors.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
+import 'dart:async';
 
 class _AddNewClothesWidget extends StatefulWidget {
 
@@ -159,6 +160,89 @@ class AddNewClothesDialog extends Dialog {
   @override
   Widget build(BuildContext context) {
     return _AddNewClothesWidget(addCallback);
+  }
+}
+
+class LoadingDialog extends Dialog {
+  static LoadingDialog shared = LoadingDialog();
+  show(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext text) {
+          return this;
+        }
+    );
+  }
+  
+  hide(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Center(
+        child: Container(
+          width: 80, height: 80,
+          padding: EdgeInsets.all(20),
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))
+            )
+          ),
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+}
+
+class TextDialog extends Dialog {
+  show(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext text) {
+          return this;
+        }
+    );
+    Future.delayed(const Duration(seconds: 2), () {
+      hide(context);
+      dismissed();
+    });
+  }
+
+  hide(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  String text;
+  VoidCallback dismissed;
+  TextDialog(String text, VoidCallback dismissed) {
+    this.text = text;
+    this.dismissed = dismissed;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
+          decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(5))
+              )
+          ),
+          child: Text(text, style: Styles.normalFont(17, Colors.black)),
+        ),
+      ),
+    );
   }
 }
 

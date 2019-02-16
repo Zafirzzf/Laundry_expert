@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:laundry_expert/HomeScreen.dart';
 import 'package:laundry_expert/LoginScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
+import 'package:laundry_expert/Tool/Preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,9 +41,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   setRootWidget() async {
-    final prefs =  await SharedPreferences.getInstance();
-    final isLogin = prefs.getBool('isLogin');
-    if (isLogin != null) {
+    final isLogin = await Preferences.isLogin();
+    if (isLogin) {
       rootWidget = HomeScreen();
     } else {
       rootWidget = LoginScreen();
