@@ -9,7 +9,8 @@ import 'package:laundry_expert/NewOrderScreen.dart';
 
 
 class InputCustomerScreen extends StatefulWidget {
-
+  final bool isAddOrder; // 是否是添加订单入口
+  const InputCustomerScreen({ @required this.isAddOrder});
   _InputCustomerState createState() => _InputCustomerState();
 }
 
@@ -43,25 +44,30 @@ class _InputCustomerState extends State<InputCustomerScreen> {
   }
   // 点击下一步
   _clickNext() {
-    final existCustomer = _existCustomers.
-    where((customer) => customer.name == _nameController.text && customer.phoneNum == _phoneController.text).toList();
-    Customer selCustomer;
-    if (existCustomer.length == 0) {
-      // 列表中没有此用户, 进行添加
-      _postCustomerInfo((newCustomer) {
-        _existCustomers.add(newCustomer);
+    if (widget.isAddOrder) {
+      // 跳转添加订单
+      final existCustomer = _existCustomers.
+      where((customer) => customer.name == _nameController.text && customer.phoneNum == _phoneController.text).toList();
+      Customer selCustomer;
+      if (existCustomer.length == 0) {
+        // 列表中没有此用户, 进行添加
+        _postCustomerInfo((newCustomer) {
+          _existCustomers.add(newCustomer);
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+            return NewOrderScreen(customer: newCustomer);
+          }));
+        });
+      } else {
+        selCustomer = existCustomer.first;
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-          return NewOrderScreen(customer: newCustomer);
+          return NewOrderScreen(customer: selCustomer);
         }));
-      });
+      }
+      _nameController.clear();
+      _phoneController.clear();
     } else {
-      selCustomer = existCustomer.first;
-      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-        return NewOrderScreen(customer: selCustomer);
-      }));
+      // 跳转顾客详情
     }
-    _nameController.clear();
-    _phoneController.clear();
   }
 
   // 点击某一条顾客

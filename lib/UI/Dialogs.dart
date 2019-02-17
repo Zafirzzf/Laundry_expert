@@ -6,7 +6,7 @@ import 'package:laundry_expert/UI/MyColors.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
-import 'package:laundry_expert/Model/OrderDetail.dart';
+import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'dart:async';
 
 class _AddNewClothesWidget extends StatefulWidget {
@@ -27,13 +27,13 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
   }
   final _priceInput = TextEditingController();
 
-  ClothesType _type;
+  String _type;
   String _color;
-  int _price;
+  String _price;
   String _wrongMsg;
 
   _clickConfirm() {
-    _price = int.parse(_priceInput.text);
+    _price = _priceInput.text;
     if (_type == null) {
       _wrongMsg = '还没有选择衣服类别';
     } else if (_color == null) {
@@ -124,9 +124,9 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
     );
   }
   // 所有衣服种类
-  List<DropdownMenuItem<ClothesType>> _clothesTypesItem() {
-    return ClothesType.values.map( (type) =>
-        DropdownMenuItem(child: Text(ClothesInfo.typeToString(type)), value: type)).toList();
+  List<DropdownMenuItem<String>> _clothesTypesItem() {
+    return ClothesInfo.allClothesTypes().map( (type) =>
+        DropdownMenuItem(child: Text(type), value: type)).toList();
   }
   // 所有备选颜色
   List<DropdownMenuItem<String>> _clothesColorsItem() {
@@ -212,7 +212,7 @@ class TextDialog extends Dialog {
           return this;
         }
     );
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       hide(context);
       dismissed();
     });

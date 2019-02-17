@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:laundry_expert/Model/Customer.dart';
 import 'dart:convert';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
+import 'package:laundry_expert/Model/OrderInfo.dart';
 
 class APIs {
 
@@ -39,6 +40,15 @@ class APIs {
     );
   }
 
+  // 获取订单识别号
+  static orderIdentiferNumber(StringCallback numberCallback) {
+    final path = 'gainIdentifynumber.action';
+    RequestManager.post(urlPath: path, parame: {}, dataCallback: (dataMap) {
+      final number = dataMap['identifynumber'] as String;
+      numberCallback(number);
+    });
+  }
+
   // 添加订单信息
   static addNewOrder(
       {String number, String totalMoney, String customerId, List<ClothesInfo> clothesInfo,
@@ -47,7 +57,7 @@ class APIs {
       ) {
     final path = 'addOrderForm.action';
     final clothesListMap = clothesInfo.map((clothes) {
-      return {"color": clothes.color, "type": clothes.typeString(), "price": clothes.price.toString()};
+      return {"color": clothes.color, "type": clothes.type, "price": clothes.price.toString()};
     }).toList();
     final listMapStr = jsonEncode(clothesListMap);
     RequestManager.post(
@@ -59,6 +69,43 @@ class APIs {
       },
       errorCallback: errorCallback
     );
+  }
+
+  // 订单详情
+  static orderDetailInfo(
+      {String orderid, void Function(OrderInfo order) infoCallback}
+      ) {
+    final path = 'orderFormDetail.action';
+    RequestManager.post(urlPath: path, parame: {"orderid": orderid}, dataCallback: (dataMap) {
+        final clothesMaplist = dataMap['clotheslist'];
+        List<ClothesInfo> clothesList = [];
+        for (var tmpMap in clothesMaplist) {
+          final clothes = ClothesInfo(
+          customer: Customer(name: dataMap['name'], phoneNum: dataMap['phone']),
+          color: tmpMap['color'],
+          price: tmpMap['money'],
+          type: tmpMap['type']
+          );
+          clothesList.add(clothes);
+        }
+        OrderState state;
+        switch (dataMap['orderstatus'] as String) {
+          case '0':  state = OrderState.noWash; break;
+          case '1':  state = OrderState.washed; break;
+          case '2':  state = OrderState.leave; break;
+        }
+        bool hasPay;
+        switch (dataMap['paystatus'] as String) {
+          case '0': hasPay = true; break;
+          case '1': hasPay = false; break;
+        }
+        final info = OrderInfo(name: dataMap['name'], phone: dataMap['phone'], state: state, hasPay: hasPay,
+                  createTime: dataMap['createtime'], clothesList: clothesList);
+        infoCallback(info);
+
+    }, errorCallback: (ret) {
+
+    });
   }
 
   // 所有顾客列表

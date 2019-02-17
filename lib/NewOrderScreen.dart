@@ -20,9 +20,9 @@ class NewOrderScreen extends StatefulWidget {
 
 class NewOrderState extends State<NewOrderScreen> {
 
-  String _idNumber = '308';
+  String _idNumber;
   List<ClothesInfo> _clothes = [];
-  int _totalMoney() => _clothes.fold(0, (value, element) => value + element.price);
+  int _totalMoney() => _clothes.fold(0, (value, element) => value + int.parse(element.price));
   // 点击空白处
   _clickEmptyArea() {
     FocusScope.of(context).requestFocus(FocusNode());
@@ -75,7 +75,10 @@ class NewOrderState extends State<NewOrderScreen> {
   @override
   void initState() {
     super.initState();
-//    _clothes = ClothesInfo.testDatas(_customer);
+    APIs.orderIdentiferNumber((number) {
+      _idNumber = number;
+      setState(() {});
+    });
   }
 
   @override
@@ -85,7 +88,7 @@ class NewOrderState extends State<NewOrderScreen> {
       appBar: AppBar(
         title: Text('新的订单'),
       ),
-      body: GestureDetector(
+      body: _idNumber == null ? Container() : GestureDetector(
         behavior: HitTestBehavior.translucent,
         child: Container(
           padding: EdgeInsets.only(top: 20, left: 15, right: 15),
@@ -201,7 +204,7 @@ class NewOrderState extends State<NewOrderScreen> {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(left: 15, top: 10, right: 15),
-                child: Text('${clothes.typeString()}  ${clothes.color}   ${clothes.price} 元',
+                child: Text('${clothes.type}  ${clothes.color}   ${clothes.price} 元',
                 style: Styles.normalFont(18, Colors.black)),
               )
             ],

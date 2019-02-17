@@ -5,7 +5,7 @@ import 'package:laundry_expert/UI/MyColors.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/InputCustomerScreen.dart';
-import 'package:laundry_expert/CustomersScreen.dart';
+import 'package:laundry_expert/CustomerDetailScreen.dart';
 import 'package:laundry_expert/Request/APIs.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,11 +14,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   _clickAdd() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-      return InputCustomerScreen();
+      return InputCustomerScreen(isAddOrder: true);
       },
       settings: RouteSettings(name: 'inputCustomer')
     ));
@@ -30,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _clickFindCustomer() {
     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-      return CustomersScreen();
+      return CustomerDetailScreen();
     }));
   }
 

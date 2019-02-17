@@ -1,4 +1,5 @@
 
+import 'package:laundry_expert/Request/APIs.dart';
 
 class Customer {
   String name;
@@ -9,13 +10,23 @@ class Customer {
     this.phoneNum = phoneNum;
     this.id = id;
   }
+  static List<Customer> _datas;
 
-  static List<Customer> testDatas() {
-    return [Customer(name: '周正飞', phoneNum: '18311192304'),
-    Customer(name: '张飞', phoneNum: '18311192304'),
-    Customer(name: '李三', phoneNum: '18311192304'),
-    Customer(name: '王五', phoneNum: '18311192304')];
+  static List<Customer> allDatas(void Function(List<Customer> lists) listCallback) {
+    if (_datas == null) {
+      APIs.customersList((list) {
+        _datas = list;
+        listCallback(list);
+      });
+    } else {
+      listCallback(_datas);
+    }
   }
+
+  static appenNewCustomer(Customer customer) {
+    _datas.add(customer);
+  }
+
   @override
   String toString() {
     return name + phoneNum;

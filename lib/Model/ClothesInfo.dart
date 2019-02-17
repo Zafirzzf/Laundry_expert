@@ -1,24 +1,18 @@
 import 'package:laundry_expert/Model/Customer.dart';
 
-enum ClothesType {
-  suit, // 西服
-  woolenCoat // 呢子大衣
-}
-
-
 class ClothesInfo {
     Customer customer;
-    ClothesType type;
+    String type;
     String color;
-    int price = 0;
+    String price;
     bool hasPay = false;
     String id = "0";
 
     ClothesInfo(
         { Customer customer,
-          ClothesType type,
+          String type,
           String color,
-          int price,
+          String price,
           bool hasPay = false,
           String id
         }) {
@@ -29,34 +23,15 @@ class ClothesInfo {
       this.hasPay = hasPay;
       this.id = id;
     }
-
-    static List<ClothesInfo> testDatas(Customer customer) {
-      return [ClothesInfo(customer: customer, type: ClothesType.suit, color: '黑色', id: "103"),
-      ClothesInfo(customer: customer, type: ClothesType.suit, color: '黑色', id: "109"),
-      ClothesInfo(customer: customer, type: ClothesType.suit, color: '黑色', id: "103"),
-      ClothesInfo(customer: customer, type: ClothesType.suit, color: '黑色', id: "102")];
+    static List<String> allClothesTypes() {
+      return ['普通西服', '普通裤子', '夹克', '休闲服', '羊绒衫', 'T恤', '衬衣',
+              '韩式裙子', '羊绒呢短衣', '羊绒呢半大衣', '短风衣', '长风衣', '小棉袄',
+              '貂皮上衣', '兔剪绒上衣', '真丝长裙', '真丝上衣', '羽绒马甲', '短羽绒棉袄',
+              '半大羽绒棉袄', '羽绒大棉袄', '皮衣', '毛衣', '羊绒大衣', '其它'];
     }
-
-    String typeString() {
-      return ClothesInfo.typeToString(type);
-    }
-
-
-    static String typeToString(ClothesType type) {
-      switch (type) {
-        case ClothesType.suit:
-          return '西服';
-        case ClothesType.woolenCoat:
-          return '呢子大衣';
-      }
-    }
-
-    static List<String> allTypeStrings() {
-      return ClothesType.values.map( (type) => typeToString(type) ).toList();
-    }
-
     static List<String> allSelectColors() {
-      return ['黑色', '白色', '红色', '蓝色', '褐色', '花色', '迷彩', '其它'];
+      return ['白色', '米白色', '黑色', '黄色', '蓝色', '绿色', '粉色', '红色',
+              '卡其色', '紫色', '驼色', '花色', '其它'];
     }
 
 }
