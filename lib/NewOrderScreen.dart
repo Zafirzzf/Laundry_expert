@@ -7,26 +7,22 @@ import 'package:laundry_expert/UI/MyTextField.dart';
 import 'package:laundry_expert/Model/Customer.dart';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
 import 'package:laundry_expert/UI/Dialogs.dart';
+import 'package:laundry_expert/Request/APIs.dart';
+import 'package:laundry_expert/OrderDetailScreen.dart';
 
 class NewOrderScreen extends StatefulWidget {
 
-  Customer customer;
-  NewOrderScreen(Customer customer) {
-    this.customer = customer;
-  }
-  NewOrderState createState() => NewOrderState(customer);
+  final Customer customer;
+
+  const NewOrderScreen({this.customer});
+  NewOrderState createState() => NewOrderState();
 }
 
 class NewOrderState extends State<NewOrderScreen> {
 
-  Customer _customer;
   String _idNumber = '308';
   List<ClothesInfo> _clothes = [];
-
-  NewOrderState(Customer customer) {
-    this._customer = customer;
-  }
-
+  int _totalMoney() => _clothes.fold(0, (value, element) => value + element.price);
   // 点击空白处
   _clickEmptyArea() {
     FocusScope.of(context).requestFocus(FocusNode());
@@ -35,7 +31,7 @@ class NewOrderState extends State<NewOrderScreen> {
   // 点击添加衣服信息
   _clickAddClothes() {
     AddNewClothesDialog((newClothes) {
-      newClothes.customer = _customer;
+      newClothes.customer = widget.customer;
       newClothes.id = _idNumber;
       _clothes.add(newClothes);
       setState(() {});
@@ -48,7 +44,32 @@ class NewOrderState extends State<NewOrderScreen> {
   }
   // 点击录入完毕
   _clickComplete() {
+    if (_clothes.isEmpty) {
+      TextDialog(text: '还没有添加衣服信息').show(context);
+    } else {
+      LoadingDialog.show(context);
+      APIs.addNewOrder(
+          number: _idNumber,
+          totalMoney: _totalMoney().toString(),
+          customerId: widget.customer.id,
+          clothesInfo: _clothes,
+          orderIdCallback: (orderId) {
+            LoadingDialog.hide(context);
+            TextDialog(text: '订单创建成功', dismissed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                return OrderDetailScreen(orderId);
+              }));
+            }).show(context);
+          },
+          errorCallback: (ret) {
 
+          }
+      );
+    }
+
+//    Navigator.popUntil(context, ModalRoute.withName('inputCustomer'));
   }
 
   @override
@@ -79,7 +100,7 @@ class NewOrderState extends State<NewOrderScreen> {
                       children: <Widget>[
                         Text('姓名: ', style: Styles.normalFont(16, Colors.black)),
                         const SizedBox(width: 16),
-                        Text(_customer.name, style: Styles.mediumFont(22, Colors.blue)),
+                        Text(widget.customer.name, style: Styles.mediumFont(22, Colors.blue)),
                         const SizedBox(width: 30),
                         Text('识别号: ', style: Styles.normalFont(16, Colors.black)),
                         const SizedBox(width: 16),
@@ -129,7 +150,7 @@ class NewOrderState extends State<NewOrderScreen> {
                       Text('件'),
                       const SizedBox(width: 40),
                       Text('需支付'),
-                      Text(' ${_clothes.fold(0, (value, element) => value + element.price)} ',
+                      Text(' ${_totalMoney()} ',
                           style: Styles.mediumFont(25, Colors.blue)),
                       Text('元'),
                     ],

@@ -16,9 +16,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   _clickAdd() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
       return InputCustomerScreen();
-    }));
+      },
+      settings: RouteSettings(name: 'inputCustomer')
+    ));
   }
 
   _clickTakeClothes() {

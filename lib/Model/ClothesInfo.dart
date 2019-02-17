@@ -5,16 +5,11 @@ enum ClothesType {
   woolenCoat // 呢子大衣
 }
 
-enum ClothesState {
-  noWash,
-  washed,
-  leave
-}
+
 class ClothesInfo {
     Customer customer;
     ClothesType type;
     String color;
-    ClothesState state = ClothesState.noWash;
     int price = 0;
     bool hasPay = false;
     String id = "0";
@@ -23,7 +18,6 @@ class ClothesInfo {
         { Customer customer,
           ClothesType type,
           String color,
-          ClothesState state = ClothesState.noWash,
           int price,
           bool hasPay = false,
           String id
@@ -31,7 +25,6 @@ class ClothesInfo {
       this.customer = customer;
       this.type = type;
       this.color = color;
-      this.state = state;
       this.price = price;
       this.hasPay = hasPay;
       this.id = id;
@@ -48,16 +41,6 @@ class ClothesInfo {
       return ClothesInfo.typeToString(type);
     }
 
-    String stateString() {
-      switch (state) {
-        case ClothesState.noWash:
-          return '未洗';
-        case ClothesState.washed:
-          return '已洗完';
-        case ClothesState.leave:
-          return '已取走';
-      }
-    }
 
     static String typeToString(ClothesType type) {
       switch (type) {

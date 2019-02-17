@@ -51,13 +51,13 @@ class _InputCustomerState extends State<InputCustomerScreen> {
       _postCustomerInfo((newCustomer) {
         _existCustomers.add(newCustomer);
         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-          return NewOrderScreen(newCustomer);
+          return NewOrderScreen(customer: newCustomer);
         }));
       });
     } else {
       selCustomer = existCustomer.first;
       Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-        return NewOrderScreen(selCustomer);
+        return NewOrderScreen(customer: selCustomer);
       }));
     }
     _nameController.clear();

@@ -3,6 +3,7 @@ import 'package:laundry_expert/Request/RequestManager.dart';
 import 'package:flutter/material.dart';
 import 'package:laundry_expert/Model/Customer.dart';
 import 'dart:convert';
+import 'package:laundry_expert/Model/ClothesInfo.dart';
 
 class APIs {
 
@@ -34,9 +35,29 @@ class APIs {
         final customerId = dataMap['id'] as String;
         idCallback(customerId);
       },
-      errorCallback: (ret) {
-        errorCallback(ret);
-      }
+      errorCallback: errorCallback
+    );
+  }
+
+  // 添加订单信息
+  static addNewOrder(
+      {String number, String totalMoney, String customerId, List<ClothesInfo> clothesInfo,
+        StringCallback orderIdCallback,
+        StringCallback errorCallback}
+      ) {
+    final path = 'addOrderForm.action';
+    final clothesListMap = clothesInfo.map((clothes) {
+      return {"color": clothes.color, "type": clothes.typeString(), "price": clothes.price.toString()};
+    }).toList();
+    final listMapStr = jsonEncode(clothesListMap);
+    RequestManager.post(
+      urlPath: path,
+      parame: {'identifynumber': number, 'totalmoney': totalMoney, 'customerid' : customerId, "clothesMapList": listMapStr},
+      dataCallback: (dataMap) {
+        final orderId = dataMap['orderid'] as String;
+        orderIdCallback(orderId);
+      },
+      errorCallback: errorCallback
     );
   }
 

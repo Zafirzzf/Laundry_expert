@@ -11,11 +11,12 @@ class RequestManager {
   static final Client client = Client();
   static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
   static post({
-      String urlPath, Map<String, dynamic> parame,
+      String urlPath, Map<String, String> parame,
       MapCallback dataCallback,
       StringCallback errorCallback
       }) async {
      parame['token'] = ShopInfo.shared.token;
+     print('请求参数: $parame');
      await client.post(host + urlPath, body: parame).then((response) {
        if (response.statusCode != 200) {
           // 服务请求出错

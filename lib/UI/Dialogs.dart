@@ -6,6 +6,7 @@ import 'package:laundry_expert/UI/MyColors.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
+import 'package:laundry_expert/Model/OrderDetail.dart';
 import 'dart:async';
 
 class _AddNewClothesWidget extends StatefulWidget {
@@ -42,7 +43,7 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
     } else {
       final newClothes = ClothesInfo(
           type: _type, color: _color, price: _price,
-          state: ClothesState.noWash, hasPay: false
+          hasPay: false
       );
       addCallback(newClothes);
       Navigator.pop(context);
@@ -165,18 +166,20 @@ class AddNewClothesDialog extends Dialog {
 
 class LoadingDialog extends Dialog {
   static LoadingDialog shared = LoadingDialog();
-  show(BuildContext context) {
+  static show(BuildContext context) {
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext text) {
-          return this;
+          return shared;
         }
     );
   }
   
   static hide(BuildContext context) {
-    Navigator.pop(context);
+    if (Navigator.of(context).canPop()) {
+      Navigator.pop(context);
+    }
   }
 
   @override
