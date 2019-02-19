@@ -6,6 +6,8 @@ import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/Request/APIs.dart';
 import 'package:laundry_expert/Model/Customer.dart';
 import 'package:laundry_expert/NewOrderScreen.dart';
+import 'package:laundry_expert/CustomerDetailScreen.dart';
+import 'package:laundry_expert/UI/Dialogs.dart';
 
 
 class InputCustomerScreen extends StatefulWidget {
@@ -44,11 +46,11 @@ class _InputCustomerState extends State<InputCustomerScreen> {
   }
   // 点击下一步
   _clickNext() {
+    final existCustomer = _existCustomers.
+    where((customer) => customer.name == _nameController.text && customer.phoneNum == _phoneController.text).toList();
+    Customer selCustomer;
     if (widget.isAddOrder) {
       // 跳转添加订单
-      final existCustomer = _existCustomers.
-      where((customer) => customer.name == _nameController.text && customer.phoneNum == _phoneController.text).toList();
-      Customer selCustomer;
       if (existCustomer.length == 0) {
         // 列表中没有此用户, 进行添加
         _postCustomerInfo((newCustomer) {
@@ -67,6 +69,11 @@ class _InputCustomerState extends State<InputCustomerScreen> {
       _phoneController.clear();
     } else {
       // 跳转顾客详情
+      if (existCustomer.length != 1) { TextDialog(text: '请选择一个已存在的顾客信息'); } else {
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+          return CustomerDetailScreen(customerId: existCustomer.first.id);
+        }));
+      }
     }
   }
 
@@ -97,8 +104,7 @@ class _InputCustomerState extends State<InputCustomerScreen> {
   @override
   void initState() {
     super.initState();
-
-    APIs.customersList((customers) {
+    Customer.allDatas((customers) {
       _existCustomers = customers;
       _filterListByInput();
     });
@@ -117,7 +123,7 @@ class _InputCustomerState extends State<InputCustomerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('添加顾客信息'),
+        title: Text(widget.isAddOrder ? '添加顾客信息' : '要查询的顾客'),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,

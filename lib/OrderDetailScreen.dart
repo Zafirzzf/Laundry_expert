@@ -106,4 +106,5 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       onTap: () { _clickClothesItem(index); },
     );
   }
+
 }

@@ -5,6 +5,7 @@ import 'package:laundry_expert/Model/Customer.dart';
 import 'dart:convert';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
+import 'package:laundry_expert/Model/CustomerDetail.dart';
 
 class APIs {
 
@@ -108,6 +109,47 @@ class APIs {
     });
   }
 
+  // 顾客的详情
+  static customerDetailInfo({String customerId, void Function(CustomerDetail) infoCallback}) {
+    final path = 'customerDetail.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {'customerid': customerId},
+      dataCallback: (dataMap) {
+        final mapLists = dataMap['orderlist'];
+        List<OrderListItem> orders = [];
+        for (var tmpMap in mapLists) {
+          final statusStr = tmpMap['orderstatus'] as String;
+          OrderState orderState;
+          switch (statusStr) {
+            case '0': orderState = OrderState.noWash; break;
+            case '1': orderState = OrderState.washed; break;
+            case '2': orderState = OrderState.leave; break;
+          }
+          bool hasPay;
+          switch (dataMap['paystatus'] as String) {
+            case '0': hasPay = true; break;
+            case '1': hasPay = false; break;
+          }
+          final orderItem = OrderListItem(
+              orderstatus: orderState,
+              hasPay: hasPay,
+              identifynumber: dataMap['identifynumber'] as String);
+          orders.add(orderItem);
+        }
+        final detailInifo = CustomerDetail(
+            name: dataMap['name'],
+            telephone: dataMap['telephone'],
+            id: dataMap['id'],
+            status: dataMap['status'],
+            orderLists: orders);
+        infoCallback(detailInifo);
+      },
+      errorCallback: (ret) {
+
+      }
+    );
+  }
   // 所有顾客列表
   static customersList(void Function(List<Customer>) listCallback) {
     final path = 'customerList.action';

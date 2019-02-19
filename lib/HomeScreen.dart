@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _clickFindCustomer() {
     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-      return CustomerDetailScreen();
+      return InputCustomerScreen(isAddOrder: false);
     }));
   }
 
