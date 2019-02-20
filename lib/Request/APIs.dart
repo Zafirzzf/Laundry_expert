@@ -126,22 +126,21 @@ class APIs {
             case '1': orderState = OrderState.washed; break;
             case '2': orderState = OrderState.leave; break;
           }
-          bool hasPay;
-          switch (dataMap['paystatus'] as String) {
-            case '0': hasPay = true; break;
-            case '1': hasPay = false; break;
-          }
+
           final orderItem = OrderListItem(
               orderstatus: orderState,
-              hasPay: hasPay,
-              identifynumber: dataMap['identifynumber'] as String);
+              hasPay: tmpMap['haspay'],
+              time: tmpMap['time'] as String,
+              identifynumber: tmpMap['identifynumber'] as String,
+              id: tmpMap['id']);
           orders.add(orderItem);
         }
         final detailInifo = CustomerDetail(
             name: dataMap['name'],
             telephone: dataMap['telephone'],
             id: dataMap['id'],
-            status: dataMap['status'],
+            isvip: dataMap['isvip'],
+            remainmoney: dataMap['remainmoney'],
             orderLists: orders);
         infoCallback(detailInifo);
       },

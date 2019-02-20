@@ -5,20 +5,17 @@ class CustomerDetail {
   String name;
   String telephone;
   String id;
-  String status;
+  bool isvip;
+  String remainmoney;
   List<OrderListItem> orderLists;
-  CustomerDetail({this.name, this.telephone, this.id, this.status, this.orderLists}) {
-    this.name = name;
-    this.telephone = telephone;
-    this.id = id;
-    this.status = status;
-    this.orderLists = orderLists;
-  }
+  CustomerDetail({this.name, this.telephone, this.id, this.isvip, this.orderLists, this.remainmoney});
 }
 
 class OrderListItem {
   OrderState orderstatus;
   bool hasPay;
+  String time;
   String identifynumber;
-  OrderListItem({this.orderstatus, this.hasPay, this.identifynumber});
+  String id;
+  OrderListItem({this.orderstatus, this.hasPay, this.identifynumber, this.time, this.id});
 }
