@@ -11,20 +11,16 @@ class OrderInfo {
   String orderNum;
   bool hasPay;
   OrderState state;
+  String identifynumber;
   String createTime;
   List<ClothesInfo> clothesList;
-  OrderInfo({String name, String phone, String orderNum,
-    bool hasPay, OrderState state, String createTime,
-    List<ClothesInfo> clothesList}) {
-    this.name = name;
-    this.phone = phone;
-    this.orderNum = orderNum;
-    this.hasPay = hasPay;
-    this.state = state;
-    this.createTime = createTime;
-    this.clothesList = clothesList;
-  }
+  OrderInfo({this.name, this.phone, this.orderNum,
+  this.hasPay, this.state, this.identifynumber, this.createTime, this.clothesList});
 
+  String totalMoney() {
+    final money = clothesList.fold(0, (value, element) => value + int.parse(element.price));
+    return (money as int).toString();
+  }
   String stateString() {
     switch (state) {
       case OrderState.noWash:

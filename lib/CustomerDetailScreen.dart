@@ -19,6 +19,9 @@ class CustomerDetailScreen extends StatefulWidget {
 class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
   CustomerDetail _info;
+  String _barTitle() {
+    return _info == null ? "" : _info.name + (_info.isvip ? '会员' : "");
+  }
 
   @override
   void initState() {
@@ -47,7 +50,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_info == null ? " " : _info.name),
+        title: Text(_barTitle()),
       ),
       body: _bodyState(),
     );
@@ -61,24 +64,39 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     return Stack(
       children: <Widget>[
         Positioned(
-          top: 20, left: 20, right: 20, height: 200,
+          top: 15, left: 0, right: 0, height: 20,
+          child: Center(
+            child: Text('待取衣服', style: Styles.normalFont(20, Colors.blue)),
+          ),
+        ),
+        Positioned(
+          top: 60, left: 20, right: 20, height: 200,
           child: _clothesList(),
         ),
         Positioned(
-          left: 20, right: 20, bottom: 20,
-          child: Row(
-            children: <Widget>[
-              Text('余额 ', style: Styles.normalFont(15, Colors.black)),
-              Text(_info.remainmoney, style: Styles.normalFont(20, Colors.blue)),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: RaisedButton(
-                    child: Text('充值'),
-                      onPressed: _clickChongzhi),
-                ),
-              )
-            ],
+          left: 0, right: 0, bottom: 20,
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            decoration: BoxDecoration(
+                color: Colors.white,
+//                        border: Border.all(width: 1, color: Colors.blue),
+                boxShadow: [BoxShadow(color: Colors.blue, blurRadius: 0.8)],
+                borderRadius: BorderRadius.all(Radius.circular(5))
+            ),
+            child: Row(
+              children: <Widget>[
+                Text('余额 ', style: Styles.normalFont(15, Colors.black)),
+                Text(_info.remainmoney, style: Styles.normalFont(20, Colors.blue)),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    child: RaisedButton(
+                      child: Text('充值'),
+                        onPressed: _clickChongzhi),
+                  ),
+                )
+              ],
+            ),
           ),
         )
       ],

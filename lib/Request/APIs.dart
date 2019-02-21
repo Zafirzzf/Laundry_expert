@@ -95,13 +95,8 @@ class APIs {
           case '1':  state = OrderState.washed; break;
           case '2':  state = OrderState.leave; break;
         }
-        bool hasPay;
-        switch (dataMap['paystatus'] as String) {
-          case '0': hasPay = true; break;
-          case '1': hasPay = false; break;
-        }
-        final info = OrderInfo(name: dataMap['name'], phone: dataMap['phone'], state: state, hasPay: hasPay,
-                  createTime: dataMap['createtime'], clothesList: clothesList);
+        final info = OrderInfo(name: dataMap['name'], phone: dataMap['phone'], state: state, hasPay: dataMap['haspay'],
+                  createTime: dataMap['createtime'], identifynumber: dataMap['identifynumber'], clothesList: clothesList);
         infoCallback(info);
 
     }, errorCallback: (ret) {
