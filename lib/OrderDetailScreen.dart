@@ -7,6 +7,7 @@ import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/UI/Dialogs.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Request/APIs.dart';
+import 'package:laundry_expert/Model/ClothesInfo.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
@@ -82,10 +83,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
           Positioned(
             top: 50, left: 20, right: 20, bottom: 150,
-            child: Card(
-              elevation: 3,
-              child: _clothesList()
-            ),
+            child: _clothesList(),
           ),
           Positioned(
             left: 15, right: 15, bottom: 110,
@@ -97,16 +95,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
           Positioned(
             left: 15, right: 15, bottom: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            child: Column(
               children: <Widget>[
-                Text(_orderInfo.createTime, style: Styles.normalFont(13, Colors.black87)),
-                const SizedBox(width: 30),
-                Text(_orderInfo.clothesList.length.toString() + ' 件', style: Styles.normalFont(17, Colors.black87)),
-                const SizedBox(width: 30),
-                Text('共  ', style: Styles.normalFont(17, Colors.black87)),
-                Text(_orderInfo.totalMoney(), style: Styles.normalFont(25, _orderInfo.hasPay ? Colors.green : Colors.red)),
-                Text('  元', style: Styles.normalFont(17, Colors.black87)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(_orderInfo.clothesList.length.toString() + ' 件', style: Styles.normalFont(17, Colors.black87)),
+                    const SizedBox(width: 30),
+                    Text('共  ', style: Styles.normalFont(17, Colors.black87)),
+                    Text(_orderInfo.totalMoney(), style: Styles.normalFont(25, _orderInfo.hasPay ? Colors.green : Colors.red)),
+                    Text('  元', style: Styles.normalFont(17, Colors.black87)),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(_orderInfo.createTime, style: Styles.normalFont(14, Colors.black87)),
+                  ],
+                )
               ],
             ),
           )
@@ -164,21 +171,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   // 每一条衣服
   Widget _itemOfClothes(int index) {
-    final clothes = _clothes()[index];
+    final clothes = _clothes()[index] as ClothesInfo;
     return GestureDetector(
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 10, right: 15),
-                child: Text('${clothes.type}  ${clothes.color}   ${clothes.price} 元',
-                    style: Styles.normalFont(16, Colors.black)),
-              )
-            ],
-          ),
-          (index == _clothes().length - 1) ? Container() : Padding(padding: EdgeInsets.only(left: 15, right: 15), child: Divider())
-        ],
+      child: Container(
+        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Colors.blueAccent,
+            borderRadius: BorderRadius.all(Radius.circular(4))
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(clothes.color + "   ${clothes.type}", style: Styles.normalFont(16, Colors.white)),
+            Text('¥${clothes.price}', style: Styles.normalFont(16, Colors.white))
+          ],
+        ),
       ),
       onTap: () { _clickClothesItem(index); },
     );

@@ -5,6 +5,7 @@ import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/Request/APIs.dart';
 import 'package:laundry_expert/Model/Customer.dart';
+import 'package:laundry_expert/UI/Dialogs.dart';
 import 'package:laundry_expert/Model/CustomerDetail.dart';
 import 'package:laundry_expert/OrderDetailScreen.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
@@ -44,7 +45,10 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
 
   _clickChongzhi() {
+    ChongzhiAlert((inputText) {
+      final money = int.parse(inputText);
 
+    }).show(context);
   }
 
   _selectOrderstateOrList(int index) {

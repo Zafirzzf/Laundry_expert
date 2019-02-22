@@ -249,6 +249,66 @@ class TextDialog extends Dialog {
   }
 }
 
+class ChongzhiAlert extends Dialog {
+  StringCallback textCallback;
+  ChongzhiAlert(this.textCallback);
+  final _inputController = TextEditingController();
+
+  show(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext text) {
+          return this;
+        }
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+          margin: EdgeInsets.all(20),
+          height: 170,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(5))
+          ),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                top: 0, right: 10, width: 30, height: 30,
+                child: IconButton(icon: Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+              ),
+              Positioned(
+                top: 30, left: 0, right: 30,
+                child: TextField(
+                  controller: _inputController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.warning),
+                    labelText: '充值金额'
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 0, right: 0, bottom: 5, height: 40,
+                child: CommonBigButton(title: '确定', onPressed: () {
+                  textCallback(_inputController.text ?? ' ');
+                  Navigator.pop(context);
+                }),
+              )
+            ],
+          )
+        ),
+      ),
+    );
+  }
+}
+
 class CommonAlert extends Dialog {
 
   String title;

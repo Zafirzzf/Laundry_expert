@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 typedef IntCallback = void Function(int index);
+typedef StringCallback = void Function(String str);
 
 abstract class Styles {
   static TextStyle normalFont(double size, Color color) {
