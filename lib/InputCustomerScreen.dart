@@ -190,6 +190,7 @@ class _InputCustomerState extends State<InputCustomerScreen> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           child: Container(
             height: 55,
             child: ListTile(title: Text(customer.name), subtitle: Text(customer.phoneNum)),

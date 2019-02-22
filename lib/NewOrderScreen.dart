@@ -130,6 +130,7 @@ class NewOrderState extends State<NewOrderScreen> {
                     // 添加按钮
                     const SizedBox(height: 10),
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -198,6 +199,7 @@ class NewOrderState extends State<NewOrderScreen> {
   Widget _itemOfClothes(int index) {
     final clothes = _clothes[index];
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       child: Column(
         children: <Widget>[
           Row(

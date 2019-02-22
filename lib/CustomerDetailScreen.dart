@@ -9,6 +9,7 @@ import 'package:laundry_expert/UI/Dialogs.dart';
 import 'package:laundry_expert/Model/CustomerDetail.dart';
 import 'package:laundry_expert/OrderDetailScreen.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
+import 'package:laundry_expert/UserRecordScreen.dart';
 
 class CustomerDetailScreen extends StatefulWidget {
   @override
@@ -38,6 +39,12 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     });
   }
 
+  _clickHistoryRecord() {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return UserRecrodScreen(widget.customerId);
+    }));
+
+  }
   _clickOneOrderItem(int index) {
     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
       return OrderDetailScreen(_info.orderLists[index].id);
@@ -60,6 +67,9 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.library_books), onPressed: _clickHistoryRecord)
+        ],
         title: Text(_barTitle()),
       ),
       body: _bodyState(),
@@ -78,11 +88,11 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
           child: MySegement(itemsTitles: ['待取', '未洗', '取走'], indexClick: _selectOrderstateOrList),
         ),
         Positioned(
-          top: 60, left: 20, right: 20, bottom: 80,
-          child: _clothesList(),
+          top: 60, left: 20, right: 20, bottom: 50,
+          child: _orderListView(),
         ),
         Positioned(
-          left: 0, right: 0, bottom: 20,
+          left: 0, right: 0, bottom: 0, height: 50,
           child: Container(
             padding: EdgeInsets.only(left: 20, right: 20),
             decoration: BoxDecoration(
@@ -112,7 +122,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
 
   // 订单列表
-  Widget _clothesList() {
+  Widget _orderListView() {
     return ListView.builder(
       itemBuilder:(BuildContext context, int index) {
         return _itemOfClothes(index);
@@ -125,6 +135,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   Widget _itemOfClothes(int index) {
     final order = _info.orderLists[index];
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       child: Container(
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),

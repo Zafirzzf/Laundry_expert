@@ -173,6 +173,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget _itemOfClothes(int index) {
     final clothes = _clothes()[index] as ClothesInfo;
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       child: Container(
         margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
         padding: EdgeInsets.all(10),

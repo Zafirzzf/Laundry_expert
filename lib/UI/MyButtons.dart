@@ -67,7 +67,7 @@ class _MySegementState extends State<MySegement> {
 
   Widget _segementItem(String title, bool isSelect, VoidCallback pressed) {
     return Container(
-      width: 80, height: 30,
+      width: 81, height: 30,
       decoration: BoxDecoration(
           border: Border.all(
               color: Colors.blue,
@@ -76,7 +76,7 @@ class _MySegementState extends State<MySegement> {
           borderRadius: BorderRadius.circular(2),
           gradient: RadialGradient(
               colors: isSelect ? [Colors.blue, Colors.blueAccent] : [Colors.white, Colors.white24],
-              radius: 0.4
+              radius: 0.6
           )
       ),
       child: FlatButton(
