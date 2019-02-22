@@ -74,7 +74,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
           child: MySegement(itemsTitles: ['待取', '未洗', '取走'], indexClick: _selectOrderstateOrList),
         ),
         Positioned(
-          top: 60, left: 20, right: 20, height: 200,
+          top: 60, left: 20, right: 20, bottom: 80,
           child: _clothesList(),
         ),
         Positioned(
@@ -121,23 +121,40 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   Widget _itemOfClothes(int index) {
     final order = _info.orderLists[index];
     return GestureDetector(
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(order.identifynumber, style: Styles.normalFont(16, Colors.black)),
-              const SizedBox(width: 50),
-              Text(order.time, style: Styles.normalFont(14, Colors.black87)),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Icon(Icons.navigate_next),
-                ),
-              )
-            ],
-          ),
-          (index == _info.orderLists.length - 1) ? Container() : Padding(padding: EdgeInsets.only(left: 15, right: 15), child: Divider())
-        ],
+      child: Container(
+        padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        decoration: BoxDecoration(
+          color: Colors.blueAccent,
+          borderRadius: BorderRadius.all(Radius.circular(8))
+        ),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('编号 ${order.identifynumber}', style: Styles.mediumFont(16, Colors.white)),
+                Text(order.stateString(), style: Styles.normalFont(16, Colors.white))
+              ],
+            ),
+            const SizedBox(height: 15),
+            Container(
+              alignment: Alignment.centerRight,
+              child: Text(order.time, style: Styles.normalFont(17, Colors.white)),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text('¥' + order.money,
+                    style: order.hasPay ?
+                    Styles.overlineNormal(20, Colors.white) : Styles.normalFont(20, Colors.white)),
+                const SizedBox(width: 30),
+                Text(order.hasPay ? '已付' : '未付', style: Styles.normalFont(16, Colors.white))
+              ],
+            )
+          ],
+        ),
       ),
       onTap: () { _clickOneOrderItem(index); },
     );

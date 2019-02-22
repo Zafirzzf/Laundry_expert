@@ -14,6 +14,16 @@ abstract class Styles {
       color: color
     );
   }
+  static TextStyle overlineNormal(double size, Color color) {
+    return TextStyle(
+        decoration: TextDecoration.lineThrough,
+        fontSize: size,
+        fontStyle: FontStyle.normal,
+        fontFamily: 'NotoSans',
+        fontWeight: FontWeight.normal,
+        color: color
+    );
+  }
 
   static TextStyle mediumFont(double size, Color color) {
     return TextStyle(

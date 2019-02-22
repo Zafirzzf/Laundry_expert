@@ -126,7 +126,8 @@ class APIs {
               hasPay: tmpMap['haspay'],
               time: tmpMap['time'] as String,
               identifynumber: tmpMap['identifynumber'] as String,
-              id: tmpMap['id']);
+              id: tmpMap['id'],
+              money: tmpMap['totalmoney']);
           orders.add(orderItem);
         }
         final detailInifo = CustomerDetail(

@@ -3,6 +3,7 @@ enum OrderState {
   noWash,
   washed,
   leave
+
 }
 
 class OrderInfo {
