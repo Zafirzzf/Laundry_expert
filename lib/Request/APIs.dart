@@ -8,7 +8,6 @@ import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Model/CustomerDetail.dart';
 
 class APIs {
-
   // 登录
   static login({String phone, String pwd,
     StringCallback tokenCallback, StringCallback errorCallback}) {

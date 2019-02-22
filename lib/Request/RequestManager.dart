@@ -9,7 +9,7 @@ typedef StringCallback = void Function(String str);
 
 class RequestManager {
   static final Client client = Client();
-  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
+  static final host = "http://47.93.9.54:8080/LeFlyHome/laundry/";
   static post({
       String urlPath, Map<String, String> parame,
       MapCallback dataCallback,

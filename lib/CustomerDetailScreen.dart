@@ -7,6 +7,7 @@ import 'package:laundry_expert/Request/APIs.dart';
 import 'package:laundry_expert/Model/Customer.dart';
 import 'package:laundry_expert/Model/CustomerDetail.dart';
 import 'package:laundry_expert/OrderDetailScreen.dart';
+import 'package:laundry_expert/Model/OrderInfo.dart';
 
 class CustomerDetailScreen extends StatefulWidget {
   @override
@@ -46,6 +47,11 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
   }
 
+  _selectOrderstateOrList(int index) {
+    final orderState = OrderState.values[index];
+    print(orderState);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,10 +70,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     return Stack(
       children: <Widget>[
         Positioned(
-          top: 15, left: 0, right: 0, height: 20,
-          child: Center(
-            child: Text('待取衣服', style: Styles.normalFont(20, Colors.blue)),
-          ),
+          top: 15, left: 0, right: 0, height: 40,
+          child: MySegement(itemsTitles: ['待取', '未洗', '取走'], indexClick: _selectOrderstateOrList),
         ),
         Positioned(
           top: 60, left: 20, right: 20, height: 200,
