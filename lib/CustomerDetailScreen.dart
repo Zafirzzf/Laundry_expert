@@ -97,9 +97,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             padding: EdgeInsets.only(left: 20, right: 20),
             decoration: BoxDecoration(
                 color: Colors.white,
-//                        border: Border.all(width: 1, color: Colors.blue),
+                border: Border.all(width: 1, color: Colors.black26),
                 boxShadow: [BoxShadow(color: Colors.blue, blurRadius: 0.8)],
-                borderRadius: BorderRadius.all(Radius.circular(5))
             ),
             child: Row(
               children: <Widget>[
