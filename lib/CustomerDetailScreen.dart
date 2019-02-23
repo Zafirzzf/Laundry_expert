@@ -11,6 +11,8 @@ import 'package:laundry_expert/OrderDetailScreen.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/UserRecordScreen.dart';
 
+
+/// 顾客信息详情
 class CustomerDetailScreen extends StatefulWidget {
   @override
   final String customerId;
@@ -21,9 +23,11 @@ class CustomerDetailScreen extends StatefulWidget {
 
 class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
-  CustomerDetail _info;
+  CustomerDetail _noWashInfo;
+  CustomerDetail _washedInfo;
+  CustomerDetail _leaveInfo;
   String _barTitle() {
-    return _info == null ? "" : _info.name + (_info.isvip ? '会员' : "");
+    return _noWashInfo == null ? "" : _noWashInfo.name + (_noWashInfo.isvip ? '(会员)' : "");
   }
 
   @override
@@ -32,9 +36,18 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     _fetchDetailData();
   }
 
+  // 此接口目的是获取余额与是否是会员
   _fetchDetailData() {
-    APIs.customerDetailInfo(customerId: widget.customerId, infoCallback: (info) {
-      _info = info;
+    APIs.customerDetailInfo(customerId: widget.customerId, state: OrderState.noWash, infoCallback: (info) {
+      _noWashInfo = info;
+      setState(() {});
+    });
+    APIs.customerDetailInfo(customerId: widget.customerId, state: OrderState.washed, infoCallback: (info) {
+      _washedInfo = info;
+      setState(() {});
+    });
+    APIs.customerDetailInfo(customerId: widget.customerId, state: OrderState.leave, infoCallback: (info) {
+      _leaveInfo = info;
       setState(() {});
     });
   }
@@ -45,16 +58,17 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     }));
 
   }
-  _clickOneOrderItem(int index) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-      return OrderDetailScreen(_info.orderLists[index].id);
-    }));
-  }
 
   _clickChongzhi() {
     ChongzhiAlert((inputText) {
       final money = int.parse(inputText);
+      APIs.chongZhiCustomerMoney(
+          customerId: widget.customerId, money: money.toString(), successCallback: () {
+          TextDialog(text: '充值成功').show(context);
+        }, errorCallback: (error) {
 
+        }
+      );
     }).show(context);
   }
 
@@ -65,59 +79,76 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.library_books), onPressed: _clickHistoryRecord)
-        ],
-        title: Text(_barTitle()),
-      ),
-      body: _bodyState(),
-    );
-  }
-
-  Widget _bodyState() {
-    return _info == null? Container() : mainBody();
-  }
-
-  Widget mainBody() {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          top: 15, left: 0, right: 0, height: 40,
-          child: MySegement(itemsTitles: ['待取', '未洗', '取走'], indexClick: _selectOrderstateOrList),
-        ),
-        Positioned(
-          top: 60, left: 20, right: 20, bottom: 50,
-          child: _orderListView(),
-        ),
-        Positioned(
-          left: 0, right: 0, bottom: 0, height: 50,
-          child: Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(width: 1, color: Colors.black26),
-                boxShadow: [BoxShadow(color: Colors.blue, blurRadius: 0.8)],
-            ),
-            child: Row(
-              children: <Widget>[
-                Text('余额 ', style: Styles.normalFont(15, Colors.black)),
-                Text(_info.remainmoney, style: Styles.normalFont(20, Colors.blue)),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    child: RaisedButton(
-                      child: Text('充值'),
-                        onPressed: _clickChongzhi),
-                  ),
-                )
-              ],
-            ),
+    return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              IconButton(icon: Icon(Icons.library_books), onPressed: _clickHistoryRecord)
+            ],
+            title: Text(_barTitle()),
+            bottom: TabBar(tabs: _tabBarTitles()),
+          ),
+          body: Stack(
+            children: <Widget>[
+              Positioned(
+                top: 0, left: 0, right: 0, bottom: 50,
+                child: TabBarView(
+                  children: <Widget>[
+                    _washedInfo == null ? Container() : CustomersOrderListView(_washedInfo),
+                    _washedInfo == null ? Container() : CustomersOrderListView(_noWashInfo),
+                    _washedInfo == null ? Container() : CustomersOrderListView(_leaveInfo),
+                  ],
+                ),
+              ),
+              Positioned(
+                left: 0, right: 0, bottom: 0, height: 50,
+                child: _bottomMoneyView(),
+              )
+            ],
           ),
         )
-      ],
     );
+  }
+
+  List<Widget> _tabBarTitles() {
+    return ['待取', '未洗', '取走'].map((title) => Tab(text: title)).toList();
+  }
+
+  Widget _bottomMoneyView() {
+    return _washedInfo == null ? Container() : Container(
+      padding: EdgeInsets.only(left: 20, right: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(width: 1, color: Colors.black26),
+        boxShadow: [BoxShadow(color: Colors.blue, blurRadius: 0.8)],
+      ),
+      child: Row(
+        children: <Widget>[
+          Text('余额 ', style: Styles.normalFont(15, Colors.black)),
+          Text(_noWashInfo.remainmoney, style: Styles.normalFont(20, Colors.blue)),
+          Expanded(
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: RaisedButton(
+                  child: Text('充值'),
+                  onPressed: _clickChongzhi),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CustomersOrderListView extends StatelessWidget {
+  CustomerDetail info;
+  CustomersOrderListView(this.info);
+  BuildContext context;
+  @override
+  Widget build(BuildContext context) {
+    this.context = context;
+    return _orderListView();
   }
 
   // 订单列表
@@ -126,21 +157,25 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
       itemBuilder:(BuildContext context, int index) {
         return _itemOfClothes(index);
       },
-      itemCount: _info.orderLists.length,
+      itemCount: info.orderLists.length,
     );
   }
-
+  _clickOneOrderItem(int index) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+      return OrderDetailScreen(info.orderLists[index].id);
+    }));
+  }
   // 每一条订单
   Widget _itemOfClothes(int index) {
-    final order = _info.orderLists[index];
+    final order = info.orderLists[index];
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       child: Container(
         padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         decoration: BoxDecoration(
-          color: Colors.blueAccent,
-          borderRadius: BorderRadius.all(Radius.circular(8))
+            color: Colors.blueAccent,
+            borderRadius: BorderRadius.all(Radius.circular(8))
         ),
         child: Column(
           children: <Widget>[

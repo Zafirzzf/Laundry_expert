@@ -9,6 +9,7 @@ import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Request/APIs.dart';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
 
+/// 订单详情
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
   const OrderDetailScreen(this.orderId);
@@ -40,13 +41,33 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   _selectWashState(OrderState state) {
-    _orderInfo.state = state;
-    setState(() {});
+    LoadingDialog.show(context);
+    APIs.changeOrderState(orderId: widget.orderId, state: state, successCallback: (isSuccess) {
+      LoadingDialog.hide(context);
+      if (isSuccess) {
+        setState(() {
+          _orderInfo.state = state;
+        });
+      }
+    },
+      errorCallback: (error) {
+        LoadingDialog.hide(context);
+        TextDialog(text: error.alertMsg()).show(context);
+      }
+    );
   }
 
   _selectPayStatus(bool isPay) {
-    _orderInfo.hasPay = isPay;
-    setState(() {});
+    LoadingDialog.show(context);
+    APIs.changeOrderPayStatus(orderId: widget.orderId, hasPay: isPay, successCallback: () {
+      LoadingDialog.hide(context);
+       setState(() {
+         _orderInfo.hasPay = isPay;
+       });
+    }, errorCallback: (error) {
+      LoadingDialog.hide(context);
+      TextDialog(text: error.alertMsg()).show(context);
+    });
   }
 
   @override

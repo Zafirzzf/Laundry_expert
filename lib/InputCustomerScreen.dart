@@ -9,7 +9,7 @@ import 'package:laundry_expert/NewOrderScreen.dart';
 import 'package:laundry_expert/CustomerDetailScreen.dart';
 import 'package:laundry_expert/UI/Dialogs.dart';
 
-
+/// 选择/输入顾客信息
 class InputCustomerScreen extends StatefulWidget {
   final bool isAddOrder; // 是否是添加订单入口
   const InputCustomerScreen({ @required this.isAddOrder});

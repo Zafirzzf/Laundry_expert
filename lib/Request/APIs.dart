@@ -6,11 +6,12 @@ import 'dart:convert';
 import 'package:laundry_expert/Model/ClothesInfo.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Model/CustomerDetail.dart';
+import 'package:laundry_expert/Model/UserRecord.dart';
 
 class APIs {
   // 登录
   static login({String phone, String pwd,
-    StringCallback tokenCallback, StringCallback errorCallback}) {
+    StringCallback tokenCallback, ErrorCallback errorCallback}) {
 
     final path = 'login.action';
     RequestManager.post(
@@ -20,14 +21,12 @@ class APIs {
         final token = dataMap['token'] as String;
         tokenCallback(token);
       },
-      errorCallback: (ret) {
-        errorCallback(ret);
-      }
+      errorCallback: errorCallback
     );
   }
 
   // 添加顾客信息
-  static addCustomer({String name, String phone, StringCallback idCallback, StringCallback errorCallback}) {
+  static addCustomer({String name, String phone, StringCallback idCallback, ErrorCallback errorCallback}) {
     final path = 'addCustomer.action';
     RequestManager.post(
       urlPath: path,
@@ -53,7 +52,7 @@ class APIs {
   static addNewOrder(
       {String number, String totalMoney, String customerId, List<ClothesInfo> clothesInfo,
         StringCallback orderIdCallback,
-        StringCallback errorCallback}
+        ErrorCallback errorCallback}
       ) {
     final path = 'addOrderForm.action';
     final clothesListMap = clothesInfo.map((clothes) {
@@ -104,11 +103,12 @@ class APIs {
   }
 
   // 顾客的详情
-  static customerDetailInfo({String customerId, void Function(CustomerDetail) infoCallback}) {
+  static customerDetailInfo({String customerId, OrderState state, void Function(CustomerDetail) infoCallback}) {
     final path = 'customerDetail.action';
+    String stateStr = state.index.toString();
     RequestManager.post(
       urlPath: path,
-      parame: {'customerid': customerId},
+      parame: {'customerid': customerId, 'orderstatus': stateStr},
       dataCallback: (dataMap) {
         final mapLists = dataMap['orderlist'];
         List<OrderListItem> orders = [];
@@ -167,5 +167,68 @@ class APIs {
 
      }
    );
+  }
+
+  // 改变订单状态
+  static changeOrderState({String orderId, OrderState state, BoolCallback successCallback, ErrorCallback errorCallback}) {
+    final path = 'changeOrderStatus.action';
+    String stateStr;
+    switch (state) {
+      case OrderState.noWash: stateStr = '0'; break;
+      case OrderState.washed: stateStr = '1'; break;
+      case OrderState.leave: stateStr = '2'; break;
+    }
+    RequestManager.post(
+      urlPath: path,
+      parame: {'orderid': orderId, 'orderstatus': stateStr},
+      dataCallback: (dataMap) {
+        successCallback(true);
+      },
+      errorCallback: errorCallback
+    );
+  }
+
+  // 改变订单支付状态
+  static changeOrderPayStatus({String orderId, bool hasPay, VoidCallback successCallback, ErrorCallback errorCallback}) {
+    final path = 'changeOrderPayStatus.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {'orderid': orderId, 'paystatus': hasPay ? 'true' : 'false'},
+      dataCallback: (dataMap) {
+        successCallback();
+      },
+      errorCallback: errorCallback
+    );
+  }
+
+  // 顾客消费记录
+  static customerRecordList({String customerId, void Function(List<UserRecord> list) listcallBack}) {
+    final path = 'fundRecordList.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {'customerid': customerId},
+      dataCallback: (dataMap) {
+        final mapLists = dataMap['fundrecordlist'] ;
+        List<UserRecord> results = [];
+        for (var tmpMap in mapLists) {
+          final record = UserRecord(tmpMap['time'], tmpMap['status'], tmpMap['orderid'], tmpMap['changemoney']);
+          results.add(record);
+        }
+        listcallBack(results);
+      }
+    );
+  }
+
+  // 顾客充值
+  static chongZhiCustomerMoney({String customerId, String money, VoidCallback successCallback, ErrorCallback errorCallback}) {
+    final path = 'chongzhi.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {'customerid': customerId, 'money': money},
+      dataCallback: (dataMap) {
+        successCallback();
+      },
+      errorCallback: errorCallback
+    );
   }
 }

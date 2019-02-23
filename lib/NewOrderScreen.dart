@@ -10,6 +10,7 @@ import 'package:laundry_expert/UI/Dialogs.dart';
 import 'package:laundry_expert/Request/APIs.dart';
 import 'package:laundry_expert/OrderDetailScreen.dart';
 
+/// 添加新订单
 class NewOrderScreen extends StatefulWidget {
 
   final Customer customer;

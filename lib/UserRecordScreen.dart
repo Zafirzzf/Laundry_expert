@@ -9,6 +9,7 @@ import 'package:laundry_expert/Model/CustomerDetail.dart';
 import 'package:laundry_expert/OrderDetailScreen.dart';
 import 'package:laundry_expert/Model/UserRecord.dart';
 
+/// 顾客的消费记录
 class UserRecrodScreen extends StatefulWidget {
   String customerId;
   UserRecrodScreen(this.customerId);
@@ -18,14 +19,30 @@ class UserRecrodScreen extends StatefulWidget {
 
 class _UserRecrodScreenState extends State<UserRecrodScreen> {
 
-  List<UserRecord> _records = [UserRecord('2019-2-2', false, '1221', '-33.3'),
-  UserRecord('2019-2-2', true, null, '+33.3')];
-
+  List<UserRecord> _records = [];
 
   _clickRecordItem(int index) {
-    print(index);
+    final orderId = _records[index].orderId;
+    if (orderId != null) {
+      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+        return OrderDetailScreen(orderId);
+      }));
+    }
   }
 
+  _fetchListData() {
+    APIs.customerRecordList(customerId: widget.customerId, listcallBack: (list) {
+      setState(() {
+        _records = list;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchListData();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +54,7 @@ class _UserRecrodScreenState extends State<UserRecrodScreen> {
             children: <Widget>[
               Positioned(
                 top: 5, left: 15, right: 15, bottom: 15,
-                child: _recordListView(),
+                child: _records.isEmpty ? Center(child: Text('暂无记录')) : _recordListView(),
               )
             ],
           )
@@ -68,7 +85,7 @@ class _UserRecrodScreenState extends State<UserRecrodScreen> {
             Column(
               children: <Widget>[
                 const SizedBox(height: 6),
-                Text(record.isChongzhi ? '充值' : '洗衣服', style: Styles.normalFont(15, Colors.black87),),
+                Text(record.isChongzhi ? '充值' : '消费', style: Styles.normalFont(15, Colors.black87),),
                 const SizedBox(height: 5),
                 Text(record.time, style: Styles.normalFont(14, Colors.black54),)
               ],
