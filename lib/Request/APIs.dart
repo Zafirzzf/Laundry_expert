@@ -7,6 +7,7 @@ import 'package:laundry_expert/Model/ClothesInfo.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Model/CustomerDetail.dart';
 import 'package:laundry_expert/Model/UserRecord.dart';
+import 'package:laundry_expert/Model/OrderListItem.dart';
 
 class APIs {
   // 登录
@@ -167,6 +168,37 @@ class APIs {
 
      }
    );
+  }
+
+  // 所有订单列表
+  static allOrderList(OrderState state, String identifyNumber, int page, void Function(List<OrderListItem> list) listCallback) {
+    final path = 'orderPage.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {"orderstatus": state.index.toString(),
+              'identifynumber': identifyNumber, 'pagenumber,': page.toString(), 'length': '20'},
+      dataCallback: (dataMap) {
+        final mapLists = dataMap['orderlist'];
+        List<OrderListItem> orders = [];
+        for (var tmpMap in mapLists) {
+          final statusStr = tmpMap['orderstatus'] as String;
+          OrderState orderState;
+          switch (statusStr) {
+            case '0': orderState = OrderState.noWash; break;
+            case '1': orderState = OrderState.washed; break;
+            case '2': orderState = OrderState.leave; break;
+          }
+          final orderItem = OrderListItem(
+              orderstatus: orderState,
+              hasPay: tmpMap['haspay'],
+              time: tmpMap['time'] as String,
+              identifynumber: tmpMap['identifynumber'] as String,
+              id: tmpMap['id'],
+              money: tmpMap['totalmoney']);
+          orders.add(orderItem);
+        }
+      }
+    );
   }
 
   // 改变订单状态

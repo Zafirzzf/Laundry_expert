@@ -56,7 +56,6 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
       return UserRecrodScreen(widget.customerId);
     }));
-
   }
 
   _clickChongzhi() {
@@ -65,8 +64,10 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
       APIs.chongZhiCustomerMoney(
           customerId: widget.customerId, money: money.toString(), successCallback: () {
           TextDialog(text: '充值成功').show(context);
+          setState(() {
+            _noWashInfo.remainmoney = (int.parse(_noWashInfo.remainmoney) + money).toString();
+          });
         }, errorCallback: (error) {
-
         }
       );
     }).show(context);
@@ -95,9 +96,9 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
                 top: 0, left: 0, right: 0, bottom: 50,
                 child: TabBarView(
                   children: <Widget>[
-                    _washedInfo == null ? Container() : CustomersOrderListView(_washedInfo),
-                    _washedInfo == null ? Container() : CustomersOrderListView(_noWashInfo),
-                    _washedInfo == null ? Container() : CustomersOrderListView(_leaveInfo),
+                    CustomersOrderListView(_washedInfo, () => _fetchDetailData()),
+                    CustomersOrderListView(_noWashInfo, () => _fetchDetailData()),
+                    CustomersOrderListView(_leaveInfo, () => _fetchDetailData()),
                   ],
                 ),
               ),
@@ -110,6 +111,8 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         )
     );
   }
+
+
 
   List<Widget> _tabBarTitles() {
     return ['待取', '未洗', '取走'].map((title) => Tab(text: title)).toList();
@@ -143,12 +146,21 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
 
 class CustomersOrderListView extends StatelessWidget {
   CustomerDetail info;
-  CustomersOrderListView(this.info);
+  VoidCallback detailCallback;
+  CustomersOrderListView(this.info, this.detailCallback);
   BuildContext context;
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    return _orderListView();
+    if (info == null) {
+      return Container();
+    } else {
+      if (info.orderLists.isEmpty) {
+        return Center(child: Text('暂无此类型订单数据'));
+      } else {
+        return _orderListView();
+      }
+    }
   }
 
   // 订单列表
@@ -163,8 +175,11 @@ class CustomersOrderListView extends StatelessWidget {
   _clickOneOrderItem(int index) {
     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
       return OrderDetailScreen(info.orderLists[index].id);
-    }));
+    })).then((backValue) {
+      detailCallback();
+    });
   }
+
   // 每一条订单
   Widget _itemOfClothes(int index) {
     final order = info.orderLists[index];

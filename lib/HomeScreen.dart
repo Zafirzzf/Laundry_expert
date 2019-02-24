@@ -7,6 +7,7 @@ import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/InputCustomerScreen.dart';
 import 'package:laundry_expert/CustomerDetailScreen.dart';
 import 'package:laundry_expert/Request/APIs.dart';
+import 'package:laundry_expert/OrderListScreen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -33,8 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }));
   }
 
-  _clickClothesStore() {
-
+  _clickFindOrders() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+      return OrderListScreen();
+    }));
   }
 
   @override
@@ -71,8 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
               width: ScreenInfo.width - 60,
               height: 65,
               child: CommonBigButton(
-                title: '衣库',
-                onPressed: _clickClothesStore,
+                title: '查订单',
+                onPressed: _clickFindOrders,
                 backColor: Colors.blue,
               ),
             ),
