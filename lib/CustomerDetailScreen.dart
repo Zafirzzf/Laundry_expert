@@ -104,7 +104,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
               ),
               Positioned(
                 left: 0, right: 0, bottom: 0, height: 50,
-                child: _bottomMoneyView(),
+                child: _washedInfo == null ? Container() : _bottomMoneyView(),
               )
             ],
           ),

@@ -50,15 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(
-              width: ScreenInfo.width - 40,
-              height: 90,
-              child: CommonBigButton(
-                title: '取衣服',
-                onPressed: _clickTakeClothes,
-                backColor: Colors.green,
-              ),
-            ),
             const SizedBox(height: 30),
             Container(
               width: ScreenInfo.width - 60,

@@ -7,6 +7,7 @@ import 'package:laundry_expert/Model/ClothesInfo.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Model/CustomerDetail.dart';
 import 'package:laundry_expert/Model/UserRecord.dart';
+import 'package:laundry_expert/Model/OrderListItemOfUser.dart';
 import 'package:laundry_expert/Model/OrderListItem.dart';
 
 class APIs {
@@ -112,7 +113,7 @@ class APIs {
       parame: {'customerid': customerId, 'orderstatus': stateStr},
       dataCallback: (dataMap) {
         final mapLists = dataMap['orderlist'];
-        List<OrderListItem> orders = [];
+        List<OrderListItemOfUser> orders = [];
         for (var tmpMap in mapLists) {
           final statusStr = tmpMap['orderstatus'] as String;
           OrderState orderState;
@@ -122,7 +123,7 @@ class APIs {
             case '2': orderState = OrderState.leave; break;
           }
 
-          final orderItem = OrderListItem(
+          final orderItem = OrderListItemOfUser(
               orderstatus: orderState,
               hasPay: tmpMap['haspay'],
               time: tmpMap['time'] as String,
@@ -173,13 +174,19 @@ class APIs {
   // 所有订单列表
   static allOrderList(OrderState state, String identifyNumber, int page, void Function(List<OrderListItem> list) listCallback) {
     final path = 'orderPage.action';
+    var parame = Map<String, String>();
+    parame['identifynumber'] = identifyNumber ?? '';
+    parame['customerid'] = '';
+    parame['paystatus'] = '';
+    parame['orderstatus'] = state.index.toString();
+    parame['pagenumber'] = page.toString();
+    parame['length'] = '20';
     RequestManager.post(
       urlPath: path,
-      parame: {"orderstatus": state.index.toString(),
-              'identifynumber': identifyNumber, 'pagenumber,': page.toString(), 'length': '20'},
+      parame: parame,
       dataCallback: (dataMap) {
         final mapLists = dataMap['orderlist'];
-        List<OrderListItem> orders = [];
+        List<OrderListItemOfUser> orders = [];
         for (var tmpMap in mapLists) {
           final statusStr = tmpMap['orderstatus'] as String;
           OrderState orderState;
@@ -188,7 +195,7 @@ class APIs {
             case '1': orderState = OrderState.washed; break;
             case '2': orderState = OrderState.leave; break;
           }
-          final orderItem = OrderListItem(
+          final orderItem = OrderListItemOfUser(
               orderstatus: orderState,
               hasPay: tmpMap['haspay'],
               time: tmpMap['time'] as String,

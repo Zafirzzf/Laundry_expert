@@ -9,11 +9,13 @@ typedef MapCallback = void Function(Map<String, dynamic> map);
 typedef StringCallback = void Function(String str);
 typedef BoolCallback = void Function(bool bool);
 typedef ErrorCallback = void Function(RequetError error);
+typedef StringListCallback = void Function(List<String> strs);
+typedef IntListCallback = void Function(List<int> indexs);
 
 class RequestManager {
   static final Client client = Client();
-//  static final host = "http://47.93.9.54:8080/LeFlyHome/laundry/";
-  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
+  static final host = "http://47.93.9.54:8080/LeFlyHome/laundry/";
+//  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
 
   static post({
       String urlPath, Map<String, String> parame,

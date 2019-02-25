@@ -1,16 +1,13 @@
 import 'package:laundry_expert/Model/OrderInfo.dart';
 
-class OrderListItem {
+class OrderListItemOfUser {
   OrderState orderstatus;
   bool hasPay;
   String time;
   String identifynumber;
   String id;
   String money;
-  String customerName;
-  String clothesType;
-  String clothesColor;
-  bool isSelect = false; // 编辑状态下的标记
+  OrderListItemOfUser({this.orderstatus, this.hasPay, this.identifynumber, this.time, this.id, this.money});
 
   String stateString() {
     switch (orderstatus) {
@@ -22,6 +19,4 @@ class OrderListItem {
         return '已取走';
     }
   }
-  OrderListItem({this.orderstatus, this.hasPay, this.time, this.identifynumber, this.id,
-                  this.money, this.customerName, this.clothesType, this.clothesColor});
 }
