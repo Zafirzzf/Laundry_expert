@@ -32,7 +32,7 @@ class _OrderListViewState extends State<OrderListView> {
   _clickEditButton() {
     if (_isEditing) {
       // 发送修改的请求
-      
+
     }
     setState(() {
       _isEditing = !_isEditing;
