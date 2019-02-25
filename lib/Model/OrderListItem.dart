@@ -8,8 +8,6 @@ class OrderListItem {
   String id;
   String money;
   String customerName;
-  String clothesType;
-  String clothesColor;
   bool isSelect = false; // 编辑状态下的标记
 
   String stateString() {
@@ -23,5 +21,5 @@ class OrderListItem {
     }
   }
   OrderListItem({this.orderstatus, this.hasPay, this.time, this.identifynumber, this.id,
-                  this.money, this.customerName, this.clothesType, this.clothesColor});
+                  this.money, this.customerName});
 }

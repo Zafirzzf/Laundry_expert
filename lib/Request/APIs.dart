@@ -186,7 +186,7 @@ class APIs {
       parame: parame,
       dataCallback: (dataMap) {
         final mapLists = dataMap['orderlist'];
-        List<OrderListItemOfUser> orders = [];
+        List<OrderListItem> orders = [];
         for (var tmpMap in mapLists) {
           final statusStr = tmpMap['orderstatus'] as String;
           OrderState orderState;
@@ -195,15 +195,18 @@ class APIs {
             case '1': orderState = OrderState.washed; break;
             case '2': orderState = OrderState.leave; break;
           }
-          final orderItem = OrderListItemOfUser(
-              orderstatus: orderState,
-              hasPay: tmpMap['haspay'],
-              time: tmpMap['time'] as String,
-              identifynumber: tmpMap['identifynumber'] as String,
-              id: tmpMap['id'],
-              money: tmpMap['totalmoney']);
+          final orderItem = OrderListItem(
+            orderstatus: orderState,
+            hasPay: tmpMap['haspay'],
+            time: tmpMap['time'] as String,
+            identifynumber: tmpMap['identifynumber'] as String,
+            id: tmpMap['id'],
+            money: tmpMap['totalmoney'],
+            customerName: tmpMap['customername']
+          );
           orders.add(orderItem);
         }
+        listCallback(orders);
       }
     );
   }

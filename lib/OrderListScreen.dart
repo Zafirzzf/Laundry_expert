@@ -18,52 +18,23 @@ class _OrderListScreenState extends State<OrderListScreen> {
   bool _isSearching = false;
   int _page = 0;
   String _identifyNumber;
-  List<OrderListItem> _nowashDatas = [OrderListItem(
-    orderstatus: OrderState.noWash,
-    identifynumber: '13',
-    hasPay: false,
-    time: '2019-1-3',
-    money: '33',
-    customerName: '周正飞',
-    clothesColor: '蓝色',
-    clothesType: '皮衣'
-  )];
-  List<OrderListItem> _washedDatas = [];
-  List<OrderListItem> _leaveDatas = [];
 
   _clickSearchClick() {
     setState(() {
       _isSearching = true;
     });
   }
-  
-  _fetchListData() {
-    APIs.allOrderList(OrderState.washed, _identifyNumber, _page, (list) {
-      setState(() {
-        _washedDatas = list;
-      });
-    });
-    APIs.allOrderList(OrderState.noWash, _identifyNumber, _page, (list) {
-      setState(() {
-        _nowashDatas = list;
-      });
-    });
-    APIs.allOrderList(OrderState.leave, _identifyNumber, _page, (list) {
-      setState(() {
-        _leaveDatas = list;
-      });
-    });
-  }
 
   @override
   void initState() {
-    _fetchListData();
+
   }
 
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: 1,
       length: 3,
       child: Scaffold(
         appBar: _isSearching ? _searchAppbar() : _normalAppbar(),
@@ -73,9 +44,9 @@ class _OrderListScreenState extends State<OrderListScreen> {
               top: 0, left: 0, right: 0, bottom: 10,
               child: TabBarView(
                 children: <Widget>[
-                  OrderListView(items:  _nowashDatas, detailcallback: () => _fetchListData()),
-                  OrderListView(items:  _nowashDatas, detailcallback: () => _fetchListData(), canEdit: true),
-                  OrderListView(items:  _leaveDatas, detailcallback: () => _fetchListData()),
+                  OrderListView(state: OrderState.washed, detailcallback: null),
+                  OrderListView(state: OrderState.noWash, detailcallback: null),
+                  OrderListView(state: OrderState.leave, detailcallback: null)
                 ],
               ),
             ),

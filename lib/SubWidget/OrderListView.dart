@@ -6,28 +6,35 @@ import 'package:laundry_expert/OrderDetailScreen.dart';
 import 'package:laundry_expert/UI/Styles.dart';
 import 'package:laundry_expert/Request/RequestManager.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
-
+import 'package:laundry_expert/Model/OrderInfo.dart';
+import 'package:laundry_expert/Request/APIs.dart';
 
 class OrderListView extends StatefulWidget {
-  List<OrderListItem> items;
   VoidCallback detailCallback; // 进入详情页返回后的回调
-  bool canEdit = false;
-  OrderListView({List<OrderListItem> items, VoidCallback detailcallback, bool canEdit = false}) {
-    this.items = items;
+  OrderState orderState;
+  String keyword = '';
+  OrderListView({OrderState state, VoidCallback detailcallback}) {
     this.detailCallback = detailcallback;
-    this.canEdit = canEdit;
+    this.orderState = state;
   }
   @override
   _OrderListViewState createState() => _OrderListViewState();
 }
 
-class _OrderListViewState extends State<OrderListView> {
+class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveClientMixin {
 
-  List<OrderListItem> items() => widget.items;
+  List<OrderListItem> _items = [];
   bool _isEditing = false;
-  List<OrderListItem> _editSelectItems() => items().where((item) { return item.isSelect;}).toList();
+  int _page = 0;
+  bool isLoading = false; // 是否正在请求数据中
+  bool canEdit = false;
+
+  final _scrollController = ScrollController();
+  List<OrderListItem> _editSelectItems() => _items.where((item) { return item.isSelect;}).toList();
   bool hasSelectItem() => _editSelectItems().isNotEmpty;
 
+  @override
+  bool get wantKeepAlive => true;
   
   _clickEditButton() {
     if (_isEditing) {
@@ -38,13 +45,64 @@ class _OrderListViewState extends State<OrderListView> {
       _isEditing = !_isEditing;
     });
   }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.orderState == OrderState.noWash) {
+      canEdit = true;
+    }
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _loadMoreData();
+      }
+    });
+    _fetchListData();
+  }
+
+  _loadMoreData() {
+    if (!isLoading) {
+      setState(() {
+        _page++;
+        isLoading = true;
+      });
+      _fetchListData();
+    }
+  }
+  _fetchListData() {
+    switch (widget.orderState) {
+      case OrderState.noWash:
+        APIs.allOrderList(OrderState.noWash, widget.keyword, _page, (list) {
+          _receiveNewData(list);
+        }); break;
+      case OrderState.washed:
+        APIs.allOrderList(OrderState.washed, widget.keyword, _page, (list) {
+          _receiveNewData(list);
+        }); break;
+      case OrderState.leave:
+        APIs.allOrderList(OrderState.leave, widget.keyword, _page, (list) {
+          _receiveNewData(list);
+        }); break;
+    }
+  }
+
+  _receiveNewData(List<OrderListItem> list) {
+    setState(() {
+      if (_page > 0) {
+        _items.addAll(list);
+      } else {
+        _items = list;
+      }
+      isLoading = false;
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
-    if (items() == null) {
+    if (_items == null) {
       return Container();
     } else {
-      if (items().isEmpty) {
+      if (_items.isEmpty) {
         return Center(child: Text('暂无此类型订单数据'));
       } else {
         return  _normalBody();
@@ -53,7 +111,7 @@ class _OrderListViewState extends State<OrderListView> {
   }
 
   Widget _normalBody() {
-    if (widget.canEdit) {
+    if (canEdit) {
       return Stack(
         children: <Widget>[
           Positioned(
@@ -120,16 +178,17 @@ class _OrderListViewState extends State<OrderListView> {
   // 订单列表
   Widget _orderListView() {
     return ListView.builder(
+      controller: _scrollController,
       itemBuilder:(BuildContext context, int index) {
         return _itemOfClothes(index);
       },
-      itemCount: items().length,
+      itemCount: _items.length + 1,
     );
   }
 
   _clickOneOrderItem(int index) {
     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-      return OrderDetailScreen(items()[index].id);
+      return OrderDetailScreen(_items[index].id);
     })).then((backValue) {
       widget.detailCallback();
     });
@@ -137,6 +196,9 @@ class _OrderListViewState extends State<OrderListView> {
 
   // 每一条订单
   Widget _itemOfClothes(int index) {
+    if (index == _items.length) {
+      return _getMoreWidget();
+    }
     if (_isEditing) {
       return Stack(
         alignment: AlignmentDirectional.centerEnd,
@@ -144,9 +206,9 @@ class _OrderListViewState extends State<OrderListView> {
           Positioned(
             child: _orderItemInfoContainer(index, true),
           ),
-          Checkbox(value: items()[index].isSelect, onChanged: (value) {
+          Checkbox(value: _items[index].isSelect, onChanged: (value) {
             setState(() {
-              items()[index].isSelect = value;
+              _items[index].isSelect = value;
             });
           })
         ],
@@ -156,11 +218,9 @@ class _OrderListViewState extends State<OrderListView> {
     }
   }
 
-
-
   // 订单信息容器
   Widget _orderItemInfoContainer(int index, bool isEdit) {
-    final order = items()[index];
+    final order = _items[index];
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       child: Container(
@@ -182,7 +242,7 @@ class _OrderListViewState extends State<OrderListView> {
             const SizedBox(height: 15),
             Row(
               children: <Widget>[
-                Text( '${order.customerName}  ${order.clothesColor} ${order.clothesType}', style: Styles.normalFont(16, Colors.white)),
+                Text( '${order.customerName} ', style: Styles.normalFont(16, Colors.white)),
               ],
             ),
             Container(
@@ -204,6 +264,27 @@ class _OrderListViewState extends State<OrderListView> {
         ),
       ),
       onTap: () { _clickOneOrderItem(index); },
+    );
+  }
+
+  Widget _getMoreWidget() {
+    return !isLoading ? Container() : Center(
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              '加载中...',
+              style: TextStyle(fontSize: 16.0),
+            ),
+            CircularProgressIndicator(
+              strokeWidth: 1.0,
+            )
+          ],
+        ),
+      ),
     );
   }
 }
