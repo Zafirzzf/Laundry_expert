@@ -6,7 +6,7 @@ import 'package:laundry_expert/UI/Styles.dart';
 import 'package:laundry_expert/UI/Dialogs.dart';
 import 'package:laundry_expert/Tool/Preferences.dart';
 import 'package:laundry_expert/Request/APIs.dart';
-import 'package:laundry_expert/Model/ShopInfo.dart';
+import 'package:laundry_expert/Model/GlobalInfo.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
         pwd: _pwdInput.text,
         tokenCallback: (token) {
           Preferences.setToken(token);
-          ShopInfo.shared.token = token;
+          GlobalInfo.shared.token = token;
           TextDialog(text: '登录成功', dismissed: () {
             loginSuccess();
           }).show(context);

@@ -394,3 +394,26 @@ class CommonAlert extends Dialog {
   }
 }
 
+class BottomSheetDialog {
+  String text;
+  BuildContext context;
+  BottomSheetDialog({this.text, this.context});
+
+  show() {
+    showModalBottomSheet(context: context, builder: (context) {
+      return Container(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Theme.of(context).accentColor,
+              fontSize: 24
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}

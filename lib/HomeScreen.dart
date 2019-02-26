@@ -5,6 +5,7 @@ import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/InputCustomerScreen.dart';
 import 'package:laundry_expert/AddVipScreen.dart';
 import 'package:laundry_expert/OrderListScreen.dart';
+import 'package:laundry_expert/DatePickerScreen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -21,25 +22,27 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
-  _clickTakeClothes() {
-
-  }
-
   _clickFindCustomer() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return InputCustomerScreen(isAddOrder: false);
     }));
   }
 
   _clickFindOrders() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return OrderListScreen();
     }));
   }
 
   _clickAddVipCustomerInfo() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return AddVipScreen();
+    }));
+  }
+
+  _clickSearchOrdersByDate() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return DatePickerScreen();
     }));
   }
 
@@ -109,6 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: Icon(Icons.person_add),
             title: Text('导入会员信息'),
             onTap: _clickAddVipCustomerInfo,
+          ),
+          ListTile(
+            leading: Icon(Icons.date_range),
+            title: Text('按日期查找订单'),
+            onTap: _clickSearchOrdersByDate,
           )
         ],
       ),

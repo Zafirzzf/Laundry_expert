@@ -2,8 +2,9 @@
 import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:laundry_expert/Model/ShopInfo.dart';
+import 'package:laundry_expert/Model/GlobalInfo.dart';
 import 'package:laundry_expert/Request/RequestError.dart';
+import 'package:laundry_expert/Model/GlobalInfo.dart';
 
 typedef MapCallback = void Function(Map<String, dynamic> map);
 typedef StringCallback = void Function(String str);
@@ -22,7 +23,7 @@ class RequestManager {
       MapCallback dataCallback,
       ErrorCallback errorCallback
       }) async {
-     parame['token'] = ShopInfo.shared.token;
+     parame['token'] = GlobalInfo.shared.token;
      print('请求参数: $parame');
      await client.post(host + urlPath, body: parame).then((response) {
        if (response.statusCode != 200) {
@@ -34,6 +35,8 @@ class RequestManager {
          final ret = result['ret'];
          if (ret == "0") {
            dataCallback(result['data']);
+         } else if (ret == '103') {
+           GlobalInfo.loginInvalidCallback();
          } else {
            errorCallback(RequetError(ret));
          }
