@@ -4,18 +4,21 @@ import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Model/OrderListItem.dart';
 import 'package:laundry_expert/OrderDetailScreen.dart';
 import 'package:laundry_expert/UI/Styles.dart';
+import 'package:laundry_expert/UI/Dialogs.dart';
 import 'package:laundry_expert/Request/RequestManager.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Request/APIs.dart';
+import 'package:laundry_expert/UI/RefreshWidget.dart';
 
 class OrderListView extends StatefulWidget {
   VoidCallback detailCallback; // 进入详情页返回后的回调
   OrderState orderState;
   String keyword = '';
-  OrderListView({OrderState state, VoidCallback detailcallback}) {
+  OrderListView({OrderState state, String keywrod, VoidCallback detailcallback}) {
     this.detailCallback = detailcallback;
     this.orderState = state;
+    this.keyword = keywrod;
   }
   @override
   _OrderListViewState createState() => _OrderListViewState();
@@ -25,6 +28,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
 
   List<OrderListItem> _items = [];
   bool _isEditing = false;
+  bool _noMoreData = false;
   int _page = 0;
   bool isLoading = false; // 是否正在请求数据中
   bool canEdit = false;
@@ -34,16 +38,23 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
   bool hasSelectItem() => _editSelectItems().isNotEmpty;
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => false;
   
   _clickEditButton() {
     if (_isEditing) {
       // 发送修改的请求
-
+      CommonAlert(title: '确定要将这些衣服设为洗完并发送短信吗?', rightTitle: '确定', rightClick: () {
+        setState(() {
+          _isEditing = !_isEditing;
+        });
+      }).show(context);          
+  
+    } else {
+      setState(() {
+        _isEditing = !_isEditing;
+      });
     }
-    setState(() {
-      _isEditing = !_isEditing;
-    });
+
   }
 
   @override
@@ -53,6 +64,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
       canEdit = true;
     }
     _scrollController.addListener(() {
+      if (_noMoreData) { return ;}
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _loadMoreData();
       }
@@ -67,6 +79,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
         isLoading = true;
       });
       _fetchListData();
+      isLoading = true;
     }
   }
   _fetchListData() {
@@ -89,7 +102,11 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
   _receiveNewData(List<OrderListItem> list) {
     setState(() {
       if (_page > 0) {
-        _items.addAll(list);
+        if (list.isEmpty) {
+          _noMoreData = true;
+        } else {
+          _items.addAll(list);
+        }
       } else {
         _items = list;
       }
@@ -268,23 +285,12 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
   }
 
   Widget _getMoreWidget() {
-    return !isLoading ? Container() : Center(
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '加载中...',
-              style: TextStyle(fontSize: 16.0),
-            ),
-            CircularProgressIndicator(
-              strokeWidth: 1.0,
-            )
-          ],
-        ),
-      ),
-    );
+    return LoadMoreBottomWidget(_noMoreData, isLoading);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 }

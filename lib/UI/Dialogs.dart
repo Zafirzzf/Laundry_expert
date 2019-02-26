@@ -340,8 +340,8 @@ class CommonAlert extends Dialog {
       child: Center(
         heightFactor: 1.0,
         child: Container(
-          height: 150,
           margin: EdgeInsets.only(left: 30, right: 30),
+          padding: EdgeInsets.fromLTRB(30, 20, 20, 0),
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
@@ -349,22 +349,23 @@ class CommonAlert extends Dialog {
             )
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const SizedBox(height: 40),
               Container(
-                height: 20,
                   child: Text(title, style: Styles.normalFont(18, MyColors.black33))
               ),
               const SizedBox(height: 40),
               Divider(height: 1, color: MyColors.grayCCC),
               Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Container(
                     height: 48,
-                    width: (ScreenInfo.width - 60 - 1) / 2,
                     child: FlatButton(
                       child: Text(leftTitle),
-                      textColor: MyColors.subject,
+                      textColor: Colors.blue,
                       onPressed: (){ Navigator.pop(context); },
                     ),
                   ),
@@ -374,10 +375,9 @@ class CommonAlert extends Dialog {
                   ),
                   Container(
                     height: 48,
-                    width: (ScreenInfo.width - 60 - 1) / 2,
                     child: FlatButton(
                       child: Text(rightTitle),
-                      textColor: MyColors.subject,
+                      textColor: Colors.blue,
                       onPressed: (){
                           rightClick();
                           Navigator.pop(context);

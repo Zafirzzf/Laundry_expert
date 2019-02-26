@@ -44,9 +44,9 @@ class _OrderListScreenState extends State<OrderListScreen> {
               top: 0, left: 0, right: 0, bottom: 10,
               child: TabBarView(
                 children: <Widget>[
-                  OrderListView(state: OrderState.washed, detailcallback: null),
-                  OrderListView(state: OrderState.noWash, detailcallback: null),
-                  OrderListView(state: OrderState.leave, detailcallback: null)
+                  OrderListView(state: OrderState.washed, keywrod: _searchController.text, detailcallback: null),
+                  OrderListView(state: OrderState.noWash, keywrod: _searchController.text, detailcallback: null),
+                  OrderListView(state: OrderState.leave, keywrod: _searchController.text, detailcallback: null)
                 ],
               ),
             ),
@@ -71,7 +71,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         autofocus: true,
         style: TextStyle(color: Colors.white),
         decoration: const InputDecoration(
-          hintText: '按条件搜索订单',
+          hintText: '按编号搜索订单',
           hintStyle: TextStyle(color: Colors.white)
         ),
       ),

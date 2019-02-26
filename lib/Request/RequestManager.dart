@@ -2,6 +2,8 @@
 import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:laundry_expert/Model/GlobalInfo.dart';
 import 'package:laundry_expert/Request/RequestError.dart';
 import 'package:laundry_expert/Model/GlobalInfo.dart';
@@ -15,8 +17,8 @@ typedef IntListCallback = void Function(List<int> indexs);
 
 class RequestManager {
   static final Client client = Client();
-  static final host = "http://47.93.9.54:8080/LeFlyHome/laundry/";
-//  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
+//  static final host = "http://47.93.9.54:8080/LeFlyHome/laundry/";
+  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
 
   static post({
       String urlPath, Map<String, String> parame,
@@ -35,7 +37,7 @@ class RequestManager {
          final ret = result['ret'];
          if (ret == "0") {
            dataCallback(result['data']);
-         } else if (ret == '103') {
+         } else if (ret == '104') {
            GlobalInfo.loginInvalidCallback();
          } else {
            errorCallback(RequetError(ret));
