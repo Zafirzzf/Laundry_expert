@@ -1,12 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:laundry_expert/UI/Styles.dart';
-import 'package:laundry_expert/UI/MyColors.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/InputCustomerScreen.dart';
-import 'package:laundry_expert/CustomerDetailScreen.dart';
-import 'package:laundry_expert/Request/APIs.dart';
+import 'package:laundry_expert/AddVipScreen.dart';
 import 'package:laundry_expert/OrderListScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,12 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
     }));
   }
 
+  _clickAddVipCustomerInfo() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+      return AddVipScreen();
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("老周福莱特洗衣店"),
       ),
+      drawer: _buildDrawer(context),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -93,6 +97,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       )
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          const DrawerHeader(child: Center(child: Text('洗衣专家'))),
+          ListTile(
+            leading: Icon(Icons.person_add),
+            title: Text('导入会员信息'),
+            onTap: _clickAddVipCustomerInfo,
+          )
+        ],
+      ),
     );
   }
 }
