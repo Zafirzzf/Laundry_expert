@@ -273,4 +273,30 @@ class APIs {
       errorCallback: errorCallback
     );
   }
+
+  // 导入会员信息
+  static importVipCustomerInfo({String phone, String name, String money, VoidCallback successCallback, ErrorCallback errorCallback}) {
+    final path = 'importcustomer.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {'telephone': phone, 'customername': name, 'money': money},
+      dataCallback: (dataMap) {
+        successCallback();
+      },
+      errorCallback: errorCallback
+    );
+  }
+
+  // 批量修改未洗衣服为洗完
+  static changeOrderNowashToWashed({List<String> orderids, VoidCallback successCallback, ErrorCallback errorCallback}) {
+    final path = 'batchupdateorderForm.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {'orderids': orderids.join(','), 'orderstatus': '1'},
+      dataCallback: (dataMap) {
+        successCallback();
+      },
+      errorCallback: errorCallback
+    );
+  }
 }

@@ -5,7 +5,6 @@ import 'package:laundry_expert/Model/OrderListItem.dart';
 import 'package:laundry_expert/OrderDetailScreen.dart';
 import 'package:laundry_expert/UI/Styles.dart';
 import 'package:laundry_expert/UI/Dialogs.dart';
-import 'package:laundry_expert/Request/RequestManager.dart';
 import 'package:laundry_expert/Tool/ScreenInfo.dart';
 import 'package:laundry_expert/Model/OrderInfo.dart';
 import 'package:laundry_expert/Request/APIs.dart';
@@ -26,7 +25,8 @@ class OrderListView extends StatefulWidget {
 
 class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveClientMixin {
 
-  List<OrderListItem> _items = [];
+  List<OrderListItem> _items = []; // 源数据
+  List<OrderListItem> _displayItems() => _items.where((item) => item.identifynumber.contains(widget.keyword)).toList();
   bool _isEditing = false;
   bool _noMoreData = false;
   int _page = 0;
@@ -44,9 +44,19 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
     if (_isEditing) {
       // 发送修改的请求
       CommonAlert(title: '确定要将这些衣服设为洗完并发送短信吗?', rightTitle: '确定', rightClick: () {
-        setState(() {
-          _isEditing = !_isEditing;
-        });
+        APIs.changeOrderNowashToWashed(
+          orderids: _editSelectItems().map((item) => item.id).toList(),
+          successCallback: () {
+            setState(() {
+              _isEditing = !_isEditing;
+            });
+            BottomSheetDialog(text: '修改成功并已发送短信', context: context).show();
+            _reloadData();
+          },
+          errorCallback: (error) {
+            BottomSheetDialog(text: error.alertMsg()).show();
+          }
+        );
       }).show(context);          
   
     } else {
@@ -54,7 +64,16 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
         _isEditing = !_isEditing;
       });
     }
+  }
 
+
+  _clickOneOrderItem(int index) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+      return OrderDetailScreen(_displayItems()[index].id);
+    })).then((backValue) {
+        _reloadData();
+      _fetchListData();
+    });
   }
 
   @override
@@ -65,7 +84,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
     }
     _scrollController.addListener(() {
       if (_noMoreData) { return ;}
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 30) {
         _loadMoreData();
       }
     });
@@ -74,15 +93,20 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
 
   _loadMoreData() {
     if (!isLoading) {
-      setState(() {
-        _page++;
-        isLoading = true;
-      });
+      _page++;
       _fetchListData();
-      isLoading = true;
     }
   }
+
+  _reloadData() {
+    _page = 0;
+    _fetchListData();
+  }
+
   _fetchListData() {
+    setState(() {
+      isLoading = true;
+    });
     switch (widget.orderState) {
       case OrderState.noWash:
         APIs.allOrderList(OrderState.noWash, widget.keyword, _page, (list) {
@@ -120,7 +144,9 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
       return Container();
     } else {
       if (_items.isEmpty) {
-        return Center(child: Text('暂无此类型订单数据'));
+        return Center(
+            child: isLoading ? CircularProgressIndicator(strokeWidth: 2.0) : Text('暂无此类型订单数据')
+        );
       } else {
         return  _normalBody();
       }
@@ -183,6 +209,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
               child: Text('取消'),
               onTap: () {
                 setState(() {
+                  _items.forEach((item) => item.isSelect = false);
                   _isEditing = false;
                 });
               },
@@ -199,21 +226,13 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
       itemBuilder:(BuildContext context, int index) {
         return _itemOfClothes(index);
       },
-      itemCount: _items.length + 1,
+      itemCount: _displayItems().length + 1,
     );
-  }
-
-  _clickOneOrderItem(int index) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-      return OrderDetailScreen(_items[index].id);
-    })).then((backValue) {
-      widget.detailCallback();
-    });
   }
 
   // 每一条订单
   Widget _itemOfClothes(int index) {
-    if (index == _items.length) {
+    if (index == _displayItems().length) {
       return _getMoreWidget();
     }
     if (_isEditing) {
@@ -223,9 +242,9 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
           Positioned(
             child: _orderItemInfoContainer(index, true),
           ),
-          Checkbox(value: _items[index].isSelect, onChanged: (value) {
+          Checkbox(value: _displayItems()[index].isSelect, onChanged: (value) {
             setState(() {
-              _items[index].isSelect = value;
+              _displayItems()[index].isSelect = value;
             });
           })
         ],
@@ -237,7 +256,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
 
   // 订单信息容器
   Widget _orderItemInfoContainer(int index, bool isEdit) {
-    final order = _items[index];
+    final order = _displayItems()[index];
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       child: Container(

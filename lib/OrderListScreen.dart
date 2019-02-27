@@ -27,7 +27,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
 
   @override
   void initState() {
+    _searchController.addListener(() {
+      setState(() {
 
+      });
+    });
   }
 
 
@@ -62,6 +66,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         icon: Icon(Icons.arrow_back),
         onPressed: () {
           setState(() {
+            _searchController.clear();
             _isSearching = false;
           });
         },

@@ -17,8 +17,8 @@ typedef IntListCallback = void Function(List<int> indexs);
 
 class RequestManager {
   static final Client client = Client();
-//  static final host = "http://47.93.9.54:8080/LeFlyHome/laundry/";
-  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
+  static final host = "http://47.93.9.54:8080/LeFlyHome/laundry/";
+//  static final host = "http://192.168.1.6:8080/LeFlyHome/laundry/";
 
   static post({
       String urlPath, Map<String, String> parame,
@@ -27,7 +27,7 @@ class RequestManager {
       }) async {
      parame['token'] = GlobalInfo.shared.token;
      print('请求参数: $parame');
-     await client.post(host + urlPath, body: parame).then((response) {
+     client.post(host + urlPath, body: parame).then((response) {
        if (response.statusCode != 200) {
           // 服务请求出错
          print('服务器请求出错: ${response.statusCode}');
