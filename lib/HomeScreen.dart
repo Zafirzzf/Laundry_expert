@@ -6,6 +6,7 @@ import 'package:laundry_expert/InputCustomerScreen.dart';
 import 'package:laundry_expert/AddVipScreen.dart';
 import 'package:laundry_expert/OrderListScreen.dart';
 import 'package:laundry_expert/DatePickerScreen.dart';
+import 'package:laundry_expert/LoginScreen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -117,6 +118,17 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: Icon(Icons.date_range),
             title: Text('按日期查找订单'),
             onTap: _clickSearchOrdersByDate,
+          ),
+          ListTile(
+            leading: Icon(Icons.refresh),
+            title: Text('重新登录'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return LoginScreen((){
+                  Navigator.pop(context);
+                });
+              }));
+            },
           )
         ],
       ),

@@ -39,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }).show(context);
         },
         errorCallback: (errorRet) {
+          BottomSheetDialog(text: errorRet.alertMsg(), context: context).show();
         }
       );
   }
