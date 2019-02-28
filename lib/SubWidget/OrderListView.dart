@@ -155,17 +155,19 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
 
   Widget _normalBody() {
     if (canEdit) {
-      return Stack(
-        children: <Widget>[
-          Positioned(
-            top: 0, left: 0, right: 0, bottom: 40,
-            child: _orderListView(),
-          ),
-          Positioned(
-            left: 0, right: 0, bottom: 20, height: 40,
-            child: _bottomSelectView()
-          )
-        ],
+      return SafeArea(
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: 0, left: 0, right: 0, bottom: 40,
+              child: _orderListView(),
+            ),
+            Positioned(
+              left: 0, right: 0, bottom: 0, height: 40,
+              child: _bottomSelectView()
+            )
+          ],
+        ),
       );
     } else {
       return _orderListView();

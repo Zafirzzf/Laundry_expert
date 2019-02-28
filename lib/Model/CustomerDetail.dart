@@ -6,7 +6,8 @@ class CustomerDetail {
   String telephone;
   String id;
   bool isvip;
+  int discount;
   String remainmoney;
   List<OrderListItemOfUser> orderLists;
-  CustomerDetail({this.name, this.telephone, this.id, this.isvip, this.orderLists, this.remainmoney});
+  CustomerDetail({this.name, this.discount, this.telephone, this.id, this.isvip, this.orderLists, this.remainmoney});
 }

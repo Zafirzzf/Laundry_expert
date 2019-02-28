@@ -123,8 +123,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   children: <Widget>[
                     Text(_orderInfo.clothesList.length.toString() + ' 件', style: Styles.normalFont(17, Colors.black87)),
                     const SizedBox(width: 30),
-                    Text('共  ', style: Styles.normalFont(17, Colors.black87)),
-                    Text(_orderInfo.totalMoney(), style: Styles.normalFont(25, _orderInfo.hasPay ? Colors.green : Colors.red)),
+                    Text('${_orderInfo.isVip ? '折后' : ''} 共  ', style: Styles.normalFont(17, Colors.black87)),
+                    Text(_orderInfo.resultMoney, style: Styles.normalFont(25, _orderInfo.hasPay ? Colors.green : Colors.red)),
                     Text('  元', style: Styles.normalFont(17, Colors.black87)),
                   ],
                 ),

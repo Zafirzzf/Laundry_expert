@@ -14,9 +14,11 @@ class OrderInfo {
   OrderState state;
   String identifynumber;
   String createTime;
+  String resultMoney;
+  bool isVip;
   List<ClothesInfo> clothesList;
   OrderInfo({this.name, this.phone, this.orderNum,
-  this.hasPay, this.state, this.identifynumber, this.createTime, this.clothesList});
+  this.hasPay, this.state, this.identifynumber, this.createTime, this.clothesList, this.isVip, this.resultMoney});
 
   String totalMoney() {
     final money = clothesList.fold(0, (value, element) => value + int.parse(element.price));

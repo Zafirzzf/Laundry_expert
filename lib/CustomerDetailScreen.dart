@@ -74,9 +74,17 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
     }).show(context);
   }
 
-  _selectOrderstateOrList(int index) {
-    final orderState = OrderState.values[index];
-    print(orderState);
+  _clickEditDiscount() {
+    EditDiscountDialog((discount) {
+      LoadingDialog.show(context);
+      APIs.changeVipDiscountNum(customerId: widget.customerId, discount: discount.toString(), successCallback: () {
+        LoadingDialog.hide(context);
+        TextDialog(text: '成功修改为${discount}折').show(context);
+        setState(() {
+          _noWashInfo.discount = discount;
+        });
+      });
+    }).show(context);
   }
 
   @override
@@ -133,7 +141,19 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         children: <Widget>[
           Text('余额 ', style: Styles.normalFont(15, Colors.black)),
           Text(_noWashInfo.remainmoney, style: Styles.normalFont(20, Colors.blue)),
-
+          const SizedBox(width: 30),
+          GestureDetector(
+            child: Container(
+              child: !_noWashInfo.isvip ? Container() : Row(
+                children: <Widget>[
+                  Text('折扣:  ${_noWashInfo.discount.toString()}折'),
+                  const SizedBox(width: 10),
+                  Icon(Icons.edit)
+                ],
+              )
+            ),
+            onTap: _clickEditDiscount,
+          ),
           Expanded(
             child: Container(
               alignment: Alignment.centerRight,

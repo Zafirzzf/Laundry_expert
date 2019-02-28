@@ -96,7 +96,9 @@ class APIs {
           case '2':  state = OrderState.leave; break;
         }
         final info = OrderInfo(name: dataMap['name'], phone: dataMap['phone'], state: state, hasPay: dataMap['haspay'],
-                  createTime: dataMap['createtime'], identifynumber: dataMap['identifynumber'], clothesList: clothesList);
+                  createTime: dataMap['createtime'], identifynumber: dataMap['identifynumber'],
+                  resultMoney: dataMap['resultmoney'], isVip: dataMap['isvip'],
+                  clothesList: clothesList);
         infoCallback(info);
 
     }, errorCallback: (ret) {
@@ -135,6 +137,7 @@ class APIs {
         final detailInifo = CustomerDetail(
             name: dataMap['name'],
             telephone: dataMap['telephone'],
+            discount: dataMap['discount'],
             id: dataMap['id'],
             isvip: dataMap['isvip'],
             remainmoney: dataMap['remainmoney'],
@@ -271,6 +274,19 @@ class APIs {
         successCallback();
       },
       errorCallback: errorCallback
+    );
+  }
+
+  // 修改会员折扣额
+  static changeVipDiscountNum({String customerId, String discount, VoidCallback successCallback}) {
+    final path = 'changediscountnum.action';
+    RequestManager.post(
+      urlPath: path,
+      parame: {'customerid': customerId, 'discountnum' : discount},
+      dataCallback: (dataMap) {
+        successCallback();
+      },
+      errorCallback: (e) {}
     );
   }
 

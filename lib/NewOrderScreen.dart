@@ -170,7 +170,7 @@ class NewOrderState extends State<NewOrderScreen> {
                   ),
                 ),
                 Positioned(
-                  left: 0, right: 0, bottom: 00,
+                  left: 0, right: 0, bottom: 10,
                   child: Container(
                     height: 45,
                     child: CommonBigButton(title: '录入完毕', onPressed: _clickComplete),
