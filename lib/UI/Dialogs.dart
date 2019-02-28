@@ -12,19 +12,14 @@ import 'dart:async';
 class _AddNewClothesWidget extends StatefulWidget {
 
   AddClothesCallback addCallback;
-  _AddNewClothesWidget(AddClothesCallback callback) {
-    this.addCallback = callback;
-  }
+  ClothesInfo clothsInfo;
+  _AddNewClothesWidget(this.clothsInfo, this.addCallback);
   @override
-  _AddNewClothesWidgetState createState() => _AddNewClothesWidgetState(addCallback);
+  _AddNewClothesWidgetState createState() => _AddNewClothesWidgetState();
 }
 
 class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
 
-  AddClothesCallback addCallback;
-  _AddNewClothesWidgetState(AddClothesCallback addCallback) {
-    this.addCallback = addCallback;
-  }
   final _priceInput = TextEditingController();
 
   String _type;
@@ -45,10 +40,20 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
           type: _type, color: _color, price: _price,
           hasPay: false
       );
-      addCallback(newClothes);
+      widget.addCallback(newClothes);
       Navigator.pop(context);
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.clothsInfo != null) {
+      _type = widget.clothsInfo.type;
+      _color = widget.clothsInfo.color;
+      _priceInput.text = widget.clothsInfo.price;
+    }
   }
 
   @override
@@ -57,9 +62,6 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
       type: MaterialType.transparency,
       child: Center(
         child: Container(
-          width: ScreenInfo.width - 40,
-//          height: 400,
-//          height: ScreenInfo.height - ScreenInfo.topPadding(context) - 40,
           padding: EdgeInsets.all(15),
           margin: EdgeInsets.all(20),
           decoration: ShapeDecoration(
@@ -112,10 +114,7 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
                 const SizedBox(height: 20),
                 Text(_wrongMsg ?? "  ", style: Styles.normalFont(16, Colors.red)),
                 const SizedBox(height: 5),
-                Container(
-                  width: ScreenInfo.width - 80,
-                  child: CommonBigButton(title: '确定', onPressed: _clickConfirm),
-                )
+                CommonBigButton(title: '确定', onPressed: _clickConfirm),
               ],
             )],
           ),
@@ -139,10 +138,8 @@ typedef AddClothesCallback = void Function(ClothesInfo info);
 
 class AddNewClothesDialog extends Dialog {
   AddClothesCallback addCallback;
-
-  AddNewClothesDialog(AddClothesCallback addCallback) {
-    this.addCallback = addCallback;
-  }
+  ClothesInfo clothesInfo;
+  AddNewClothesDialog(this.clothesInfo, this.addCallback);
   show(BuildContext context) {
 
     showDialog(
@@ -160,7 +157,7 @@ class AddNewClothesDialog extends Dialog {
 
   @override
   Widget build(BuildContext context) {
-    return _AddNewClothesWidget(addCallback);
+    return _AddNewClothesWidget(clothesInfo, addCallback);
   }
 }
 
@@ -250,8 +247,9 @@ class TextDialog extends Dialog {
 }
 
 class ChongzhiAlert extends Dialog {
-  StringCallback textCallback;
-  ChongzhiAlert(this.textCallback);
+  IntCallback moneyCallback;
+  String _wrongHelpText;
+  ChongzhiAlert(this.moneyCallback);
   final _inputController = TextEditingController();
 
   show(BuildContext context) {
@@ -290,15 +288,21 @@ class ChongzhiAlert extends Dialog {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     icon: Icon(Icons.warning),
-                    labelText: '充值金额'
+                    labelText: '充值金额',
+                    helperText: _wrongHelpText
                   ),
                 ),
               ),
               Positioned(
                 left: 0, right: 0, bottom: 5, height: 40,
                 child: CommonBigButton(title: '确定', onPressed: () {
-                  textCallback(_inputController.text ?? ' ');
-                  Navigator.pop(context);
+                  try {
+                    final money = int.parse(_inputController.text);
+                    moneyCallback(money);
+                    Navigator.pop(context);
+                  } catch (e) {
+                    BottomSheetDialog(text: '金额输入格式有误', context: context).show();
+                  }
                 }),
               )
             ],

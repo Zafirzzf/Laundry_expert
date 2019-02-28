@@ -38,16 +38,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-//      localizationsDelegates: [
-//        // ... app-specific localization delegate[s] here
-//        GlobalMaterialLocalizations.delegate,
-//        GlobalWidgetsLocalizations.delegate,
-//      ],
-//      supportedLocales: [
-//        const Locale('en', 'US'), // English
-//        const Locale('he', 'IL'), // Hebrew
-//        // ... other locales the app supports
-//      ],
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

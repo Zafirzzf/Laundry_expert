@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             const SizedBox(height: 30),
             Container(
-              width: ScreenInfo.width - 60,
+              width: ScreenInfo.width(context) - 60,
               height: 65,
               child: CommonBigButton(
               title: '查顾客',
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
             Container(
-              width: ScreenInfo.width - 60,
+              width: ScreenInfo.width(context) - 60,
               height: 65,
               child: CommonBigButton(
                 title: '查订单',

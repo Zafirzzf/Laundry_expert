@@ -8,6 +8,7 @@ import 'package:laundry_expert/Model/Customer.dart';
 import 'package:laundry_expert/NewOrderScreen.dart';
 import 'package:laundry_expert/CustomerDetailScreen.dart';
 import 'package:laundry_expert/UI/Dialogs.dart';
+import 'package:laundry_expert/UI/MyTextField.dart';
 
 /// 选择/输入顾客信息
 class InputCustomerScreen extends StatefulWidget {
@@ -33,14 +34,16 @@ class _InputCustomerState extends State<InputCustomerScreen> {
   _postCustomerInfo(void Function(Customer customer) newCustomerCallback) {
     final name = _nameController.text;
     final phone = _phoneController.text;
+    LoadingDialog.show(context);
     APIs.addCustomer(
       name: name, phone: phone,
       idCallback: (id) {
+        LoadingDialog.hide(context);
           final newInfo = Customer(name: name, phoneNum: phone, id: id);
           newCustomerCallback(newInfo);
       },
       errorCallback: (ret) {
-
+        LoadingDialog.hide(context);
       }
     );
   }
@@ -133,8 +136,8 @@ class _InputCustomerState extends State<InputCustomerScreen> {
           child: Row(
             children: <Widget>[
               Container(
-                width: (ScreenInfo.width - 20) * 3 / 5,
-                height: ScreenInfo.height - 100,
+                width: (ScreenInfo.width(context) - 20) * 3 / 5,
+                height: ScreenInfo.height(context) - 100,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -143,7 +146,7 @@ class _InputCustomerState extends State<InputCustomerScreen> {
                     _phoneInputTF(),
                     const SizedBox(height: 40),
                     Container(
-                      width: (ScreenInfo.width - 20) / 2 - 0,
+                      width: (ScreenInfo.width(context) - 20) / 2 - 0,
                       height: 45,
                       child: CommonBigButton(title: '下一步', onPressed: _clickNext, enabled: _inputVaild),
                     ),
@@ -152,7 +155,7 @@ class _InputCustomerState extends State<InputCustomerScreen> {
                 ),
               ),
               Container(
-                width: (ScreenInfo.width - 20) * 2 / 5,
+                width: (ScreenInfo.width(context) - 20) * 2 / 5,
                 child:  Stack(
                   children: <Widget>[
                     Positioned(
@@ -207,23 +210,20 @@ class _InputCustomerState extends State<InputCustomerScreen> {
   }
 
   Widget _nameInputTF() {
-    return TextField(
+    return MyTextField(
       controller: _nameController,
-      decoration: InputDecoration(
-        labelText: '顾客姓名',
-        icon: Icon(Icons.person)
-      ),
+      labelText: '姓名',
+      keyboardType: TextInputType.number,
+      icon: Icon(Icons.phone_android),
     );
   }
 
   Widget _phoneInputTF() {
-    return TextField(
+    return MyTextField(
       controller: _phoneController,
+      labelText: '手机号',
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-          labelText: '手机号',
-          icon: Icon(Icons.phone_android)
-      ),
+      icon: Icon(Icons.phone_android),
     );
   }
 }

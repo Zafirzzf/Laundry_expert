@@ -75,9 +75,10 @@ class _OrderListScreenState extends State<OrderListScreen> {
         controller: _searchController,
         autofocus: true,
         style: TextStyle(color: Colors.white),
+        cursorColor: Colors.black,
         decoration: const InputDecoration(
           hintText: '按编号搜索订单',
-          hintStyle: TextStyle(color: Colors.white)
+          hintStyle: TextStyle(color: Colors.white54)
         ),
       ),
     );

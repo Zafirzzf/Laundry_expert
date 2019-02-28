@@ -31,7 +31,7 @@ class NewOrderState extends State<NewOrderScreen> {
 
   // 点击添加衣服信息
   _clickAddClothes() {
-    AddNewClothesDialog((newClothes) {
+    AddNewClothesDialog(null, (newClothes) {
       newClothes.customer = widget.customer;
       newClothes.id = _idNumber;
       _clothes.add(newClothes);
@@ -41,7 +41,13 @@ class NewOrderState extends State<NewOrderScreen> {
 
   // 点击某一条衣服信息
   _clickClothesItem(int index) {
-
+    final selClothes = _clothes[index];
+    AddNewClothesDialog(selClothes, (newInfo) {
+      newInfo.customer = widget.customer;
+      newInfo.id = _idNumber;
+      _clothes[index] = newInfo;
+      setState(() {});
+    }).show(context);
   }
   // 点击录入完毕
   _clickComplete() {
@@ -93,83 +99,85 @@ class NewOrderState extends State<NewOrderScreen> {
         behavior: HitTestBehavior.translucent,
         child: Container(
           padding: EdgeInsets.only(top: 20, left: 15, right: 15),
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                top: 10, left: 5, right: 5, bottom: 100,
-                child: Column(
-                  children: <Widget>[
-                    // 姓名
-                    Row(
-                      children: <Widget>[
-                        Text('姓名: ', style: Styles.normalFont(16, Colors.black)),
-                        const SizedBox(width: 16),
-                        Text(widget.customer.name, style: Styles.mediumFont(22, Colors.blue)),
-                        const SizedBox(width: 30),
-                        Text('识别号: ', style: Styles.normalFont(16, Colors.black)),
-                        const SizedBox(width: 16),
-                        Text(_idNumber, style: Styles.mediumFont(22, Colors.blue)),
-                      ],
-                    ),
-                    // 副标题
-                    const SizedBox(height: 20),
-                    Center(
-                      child: Text('送来的衣服列表', style: Styles.normalFont(16, Colors.black)),
-                    ),
-                    const SizedBox(height: 20),
-                    // 衣服列表
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-//                        border: Border.all(width: 1, color: Colors.blue),
-                        boxShadow: [BoxShadow(color: Colors.blue, blurRadius: 0.8)],
-                        borderRadius: BorderRadius.all(Radius.circular(5))
-                      ),
-                      height: _listViewHeight(),
-                      child: _clothesList(),
-                    ),
-                    // 添加按钮
-                    const SizedBox(height: 10),
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+          child: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  top: 10, left: 5, right: 5, bottom: 100,
+                  child: Column(
+                    children: <Widget>[
+                      // 姓名
+                      Row(
                         children: <Widget>[
-                          _addCircleButton(),
-                          const SizedBox(width: 20),
-                          Text('添加衣服', style: Styles.normalFont(13, Colors.black))
+                          Text('姓名: ', style: Styles.normalFont(16, Colors.black)),
+                          const SizedBox(width: 16),
+                          Text(widget.customer.name, style: Styles.mediumFont(22, Colors.blue)),
+                          const SizedBox(width: 30),
+                          Text('编号: ', style: Styles.normalFont(16, Colors.black)),
+                          const SizedBox(width: 16),
+                          Text(_idNumber, style: Styles.mediumFont(22, Colors.blue)),
                         ],
                       ),
-                      onTap: _clickAddClothes,
-                    )
-                  ],
-                ),
-              ),
-              Positioned(
-                left: 15, right: 0, bottom: 75,
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      Text('总共'),
-                      Text(' ${_clothes.length} ', style: Styles.mediumFont(25, Colors.blue)),
-                      Text('件'),
-                      const SizedBox(width: 40),
-                      Text('需支付'),
-                      Text(' ${_totalMoney()} ',
-                          style: Styles.mediumFont(25, Colors.blue)),
-                      Text('元'),
+                      // 副标题
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Text('送来的衣服列表', style: Styles.normalFont(16, Colors.black)),
+                      ),
+                      const SizedBox(height: 20),
+                      // 衣服列表
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+//                        border: Border.all(width: 1, color: Colors.blue),
+                          boxShadow: [BoxShadow(color: Colors.blue, blurRadius: 0.8)],
+                          borderRadius: BorderRadius.all(Radius.circular(5))
+                        ),
+                        height: _listViewHeight(),
+                        child: _clothesList(),
+                      ),
+                      // 添加按钮
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            _addCircleButton(),
+                            const SizedBox(width: 20),
+                            Text('添加衣服', style: Styles.normalFont(13, Colors.black))
+                          ],
+                        ),
+                        onTap: _clickAddClothes,
+                      )
                     ],
-                  )
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 0, right: 0, bottom: 20,
-                child: Container(
-                  height: 45,
-                  child: CommonBigButton(title: '录入完毕', onPressed: _clickComplete),
+                Positioned(
+                  left: 15, right: 0, bottom: 75,
+                  child: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Text('总共'),
+                        Text(' ${_clothes.length} ', style: Styles.mediumFont(25, Colors.blue)),
+                        Text('件'),
+                        const SizedBox(width: 40),
+                        Text('需支付'),
+                        Text(' ${_totalMoney()} ',
+                            style: Styles.mediumFont(25, Colors.blue)),
+                        Text('元'),
+                      ],
+                    )
+                  ),
+                ),
+                Positioned(
+                  left: 0, right: 0, bottom: 00,
+                  child: Container(
+                    height: 45,
+                    child: CommonBigButton(title: '录入完毕', onPressed: _clickComplete),
+                  )
                 )
-              )
-            ],
+              ],
+            ),
           ),
         ),
         onTap: _clickEmptyArea,
@@ -180,7 +188,7 @@ class NewOrderState extends State<NewOrderScreen> {
   double _listViewHeight() {
     final dataCount = _clothes.length;
     double height = dataCount.toDouble() * 50;
-    final maxHeight = ScreenInfo.height - ScreenInfo.topPadding(context) - 44 - 100 - 85 - 120;
+    final maxHeight = ScreenInfo.height(context) - ScreenInfo.topPadding(context) - 44 - 100 - 85 - 120;
     if (height > maxHeight) {
       height = maxHeight;
     }

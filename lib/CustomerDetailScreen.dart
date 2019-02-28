@@ -59,17 +59,18 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
   }
 
   _clickChongzhi() {
-    ChongzhiAlert((inputText) {
-      final money = int.parse(inputText);
-      APIs.chongZhiCustomerMoney(
-          customerId: widget.customerId, money: money.toString(), successCallback: () {
-          TextDialog(text: '充值成功').show(context);
-          setState(() {
-            _noWashInfo.remainmoney = (int.parse(_noWashInfo.remainmoney) + money).toString();
-          });
-        }, errorCallback: (error) {
-        }
-      );
+
+    ChongzhiAlert((money) {
+        LoadingDialog.show(context);
+        APIs.chongZhiCustomerMoney(
+            customerId: widget.customerId, money: money.toString(), successCallback: () {
+              LoadingDialog.hide(context);
+              TextDialog(text: '充值成功').show(context);
+              setState(() {
+                _noWashInfo.remainmoney = (int.parse(_noWashInfo.remainmoney) + money).toString();
+              });
+        }, errorCallback: (error) {  }
+        );
     }).show(context);
   }
 
@@ -90,23 +91,25 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             title: Text(_barTitle()),
             bottom: TabBar(tabs: _tabBarTitles()),
           ),
-          body: Stack(
-            children: <Widget>[
-              Positioned(
-                top: 0, left: 0, right: 0, bottom: 50,
-                child: TabBarView(
-                  children: <Widget>[
-                    CustomersOrderListView(_washedInfo, () => _fetchDetailData()),
-                    CustomersOrderListView(_noWashInfo, () => _fetchDetailData()),
-                    CustomersOrderListView(_leaveInfo, () => _fetchDetailData()),
-                  ],
+          body: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  top: 0, left: 0, right: 0, bottom: 50,
+                  child: TabBarView(
+                    children: <Widget>[
+                      CustomersOrderListView(_washedInfo, () => _fetchDetailData()),
+                      CustomersOrderListView(_noWashInfo, () => _fetchDetailData()),
+                      CustomersOrderListView(_leaveInfo, () => _fetchDetailData()),
+                    ],
+                  ),
                 ),
-              ),
-              Positioned(
-                left: 0, right: 0, bottom: 0, height: 50,
-                child: _washedInfo == null ? Container() : _bottomMoneyView(),
-              )
-            ],
+                Positioned(
+                  left: 0, right: 0, bottom: 0, height: 50,
+                  child: _washedInfo == null ? Container() : _bottomMoneyView(),
+                )
+              ],
+            ),
           ),
         )
     );
@@ -130,6 +133,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
         children: <Widget>[
           Text('余额 ', style: Styles.normalFont(15, Colors.black)),
           Text(_noWashInfo.remainmoney, style: Styles.normalFont(20, Colors.blue)),
+
           Expanded(
             child: Container(
               alignment: Alignment.centerRight,

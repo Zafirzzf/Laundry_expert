@@ -162,7 +162,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
             child: _orderListView(),
           ),
           Positioned(
-            left: 0, right: 0, bottom: 0, height: 40,
+            left: 0, right: 0, bottom: 20, height: 40,
             child: _bottomSelectView()
           )
         ],
@@ -174,7 +174,7 @@ class _OrderListViewState extends State<OrderListView> with AutomaticKeepAliveCl
 
   Widget _bottomSelectView() {
     return Container(
-      width: ScreenInfo.width - 40,
+//      width: ScreenInfo.width - 40,
       color: Colors.white,
       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: _isEditing ? _editBottomView() : _noEditBottomView()

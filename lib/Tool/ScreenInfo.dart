@@ -4,8 +4,16 @@ import 'package:flutter/material.dart';
 
 class ScreenInfo {
   static final double scale = window.devicePixelRatio;
-  static final double width = window.physicalSize.width / scale;
-  static final double height = window.physicalSize.height / scale;
+
+  // 屏幕宽
+  static double width(BuildContext context) {
+    return MediaQuery.of(context).size.width;
+  }
+
+  // 屏幕高
+  static double height(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
 
   // 状态栏高度, 20 / 44
   static double topPadding(BuildContext context) {
