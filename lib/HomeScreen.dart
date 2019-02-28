@@ -7,6 +7,8 @@ import 'package:laundry_expert/AddVipScreen.dart';
 import 'package:laundry_expert/OrderListScreen.dart';
 import 'package:laundry_expert/DatePickerScreen.dart';
 import 'package:laundry_expert/LoginScreen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:laundry_expert/Request/APIs.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -128,6 +130,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pop(context);
                 });
               }));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.phone_bluetooth_speaker),
+            title: Text('联系客服'),
+            onTap: () {
+              APIs.getServicePhone((phone) {
+                launch('tel:${phone}');
+              });
             },
           )
         ],
