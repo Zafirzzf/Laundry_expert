@@ -28,7 +28,16 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
   String _wrongMsg;
 
   _clickConfirm() {
-    _price = _priceInput.text;
+    int price;
+    try {
+      price = int.parse(_priceInput.text);
+      _price = price.toString();
+    } catch (e) {
+      setState(() {
+        _wrongMsg = '金额格式输入有误';
+      });
+      return;
+    }
     if (_type == null) {
       _wrongMsg = '还没有选择衣服类别';
     } else if (_color == null) {
@@ -105,6 +114,7 @@ class _AddNewClothesWidgetState extends State<_AddNewClothesWidget> {
                   },
                 ),
                 TextField(
+                  keyboardType: TextInputType.number,
                   controller: _priceInput,
                   decoration: InputDecoration(
                     labelText: '输入金额'

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laundry_expert/Request/APIs.dart';
 import 'package:laundry_expert/UI/Dialogs.dart';
 import 'package:laundry_expert/UI/MyButtons.dart';
-
+import 'package:laundry_expert/Model/Customer.dart';
 class AddVipScreen extends StatefulWidget {
   @override
   _AddVipScreenState createState() => _AddVipScreenState();
@@ -32,16 +32,37 @@ class _AddVipScreenState extends State<AddVipScreen> {
   }
   _clickConfirm() {
     if (_confirmEnabled()) {
-      final discount = _discountInputController.text;
-      if (int.parse(discount) < 1 || int.parse(discount) > 10) {
-        BottomSheetDialog(text: '请检查输入的折扣信息', context: context);
+      int discount;
+      int money;
+
+      try {
+        money = int.parse(_moneyInputController.text);
+      } catch (e) {
+        BottomSheetDialog(text: '价格输入格式有误', context: context).show();
+        return;
       }
+      try {
+        discount = int.parse(_discountInputController.text);
+        if (discount < 1 || discount > 10) {
+          BottomSheetDialog(text: '请检查输入的折扣信息', context: context).show();
+          return;
+        }
+      } catch (e) {
+        BottomSheetDialog(text: '请检查输入的折扣信息', context: context).show();
+        return;
+      }
+      LoadingDialog.show(context);
       APIs.importVipCustomerInfo(
           phone: _phoneInputController.text,
           name: _nameInputController.text,
           money: _moneyInputController.text,
           discount: _discountInputController.text,
           successCallback: () {
+            Customer.appenNewCustomer(Customer(
+              name: _nameInputController.text,
+              phoneNum: _phoneInputController.text
+            ));
+            LoadingDialog.hide(context);
             BottomSheetDialog(text: '添加成功', context: context).show();
             _phoneInputController.clear();
             _nameInputController.clear();
@@ -49,6 +70,7 @@ class _AddVipScreenState extends State<AddVipScreen> {
             _discountInputController.clear();
           },
           errorCallback: (error) {
+            LoadingDialog.hide(context);
             BottomSheetDialog(text: error.alertMsg(), context: context).show();
           }
       );

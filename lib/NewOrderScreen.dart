@@ -211,14 +211,16 @@ class NewOrderState extends State<NewOrderScreen> {
       behavior: HitTestBehavior.translucent,
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 15, top: 10, right: 15),
-                child: Text('${clothes.type}  ${clothes.color}   ${clothes.price} 元',
-                style: Styles.normalFont(18, Colors.black)),
-              )
-            ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(clothes.type, style: Styles.normalFont(18, Colors.black87)),
+                Text(clothes.color, style: Styles.normalFont(18, Colors.black87)),
+                Text('¥${clothes.price}', style: Styles.normalFont(18, Colors.black87)),
+              ],
+            ),
           ),
           (index == _clothes.length - 1) ? Container() : Padding(padding: EdgeInsets.only(left: 15, right: 15), child: Divider())
         ],
