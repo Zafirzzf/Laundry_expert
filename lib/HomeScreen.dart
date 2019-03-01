@@ -9,6 +9,10 @@ import 'package:laundry_expert/DatePickerScreen.dart';
 import 'package:laundry_expert/LoginScreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:laundry_expert/Request/APIs.dart';
+import 'package:laundry_expert/Model/GlobalInfo.dart';
+import 'package:laundry_expert/LoginScreen.dart';
+import 'package:laundry_expert/Tool/Preferences.dart';
+import 'package:laundry_expert/UI/Dialogs.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -47,6 +51,25 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return DatePickerScreen();
     }));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // 如果登录过期,回首页
+    GlobalInfo.loginInvalidCallback = () {
+
+      Navigator.pop(context);
+      Preferences.setToken('');
+      GlobalInfo.shared.token = '';
+
+      TextDialog(text: '其它设备登录了此账号,请重新登录', dismissed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(() {
+          Navigator.pop(context);
+        })));
+
+      }).show(context);
+    };
   }
 
   @override

@@ -25,15 +25,8 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     setRootWidget();
     initializeDateFormatting("zh", null);
-    // 如果登录过期,回首页
-    GlobalInfo.loginInvalidCallback = () {
-      print('登录过期');
-      BottomSheetDialog(text: '登录过期,请重新登录', context: context).show();
-      Preferences.setToken(null);
-      GlobalInfo.shared.token = null;
-      setRootWidget();
-    };
   }
+
   @override
   Widget build(BuildContext context) {
 

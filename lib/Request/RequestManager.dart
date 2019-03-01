@@ -25,7 +25,7 @@ class RequestManager {
       MapCallback dataCallback,
       ErrorCallback errorCallback
       }) async {
-     parame['token'] = GlobalInfo.shared.token;
+     parame['token'] = GlobalInfo.shared.token ?? '';
      print('请求参数: $parame');
      client.post(host + urlPath, body: parame).then((response) {
        if (response.statusCode != 200) {
@@ -38,6 +38,7 @@ class RequestManager {
          if (ret == "0") {
            dataCallback(result['data']);
          } else if (ret == '104') {
+
            GlobalInfo.loginInvalidCallback();
          } else {
            errorCallback(RequetError(ret));

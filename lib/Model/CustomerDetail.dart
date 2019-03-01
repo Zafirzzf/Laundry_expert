@@ -9,5 +9,6 @@ class CustomerDetail {
   int discount;
   String remainmoney;
   List<OrderListItemOfUser> orderLists;
+
   CustomerDetail({this.name, this.discount, this.telephone, this.id, this.isvip, this.orderLists, this.remainmoney});
 }
