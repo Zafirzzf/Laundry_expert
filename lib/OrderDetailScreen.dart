@@ -122,10 +122,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Text(_orderInfo.clothesList.length.toString() + ' 件', style: Styles.normalFont(17, Colors.black87)),
-                    const SizedBox(width: 30),
-                    Text('${_orderInfo.isVip ? '折后' : ''} 共  ', style: Styles.normalFont(17, Colors.black87)),
-                    Text(_orderInfo.resultMoney, style: Styles.normalFont(25, _orderInfo.hasPay ? Colors.green : Colors.red)),
-                    Text('  元', style: Styles.normalFont(17, Colors.black87)),
+                    const SizedBox(width: 20),
+                    Text('${_orderInfo.isVip ? '${_orderInfo.discount} 折' : ''}   共 ', style: Styles.normalFont(17, Colors.black87)),
+                    Text('¥' + _orderInfo.resultMoney, style: Styles.normalFont(25, _orderInfo.hasPay ? Colors.green : Colors.red)),
                   ],
                 ),
                 const SizedBox(height: 10),

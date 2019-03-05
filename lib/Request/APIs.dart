@@ -97,7 +97,7 @@ class APIs {
         }
         final info = OrderInfo(name: dataMap['name'], phone: dataMap['phone'], state: state, hasPay: dataMap['haspay'],
                   createTime: dataMap['createtime'], identifynumber: dataMap['identifynumber'],
-                  resultMoney: dataMap['resultmoney'], isVip: dataMap['isvip'],
+                  resultMoney: dataMap['resultmoney'], isVip: dataMap['isvip'], discount: dataMap['discount'],
                   clothesList: clothesList);
         infoCallback(info);
 

@@ -66,9 +66,7 @@ class _CustomerDetailScreenState extends State<CustomerDetailScreen> {
             customerId: widget.customerId, money: money.toString(), successCallback: () {
               LoadingDialog.hide(context);
               TextDialog(text: '充值成功').show(context);
-              setState(() {
-                _noWashInfo.remainmoney = (int.parse(_noWashInfo.remainmoney) + money).toString();
-              });
+              _fetchDetailData();
         }, errorCallback: (error) {  }
         );
     }).show(context);

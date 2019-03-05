@@ -126,7 +126,7 @@ class _InputCustomerState extends State<InputCustomerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isAddOrder ? '添加顾客信息' : '要查询的顾客'),
+        title: Text(widget.isAddOrder ? '录入顾客信息' : '选择查询的顾客'),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
