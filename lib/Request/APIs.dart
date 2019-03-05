@@ -131,7 +131,11 @@ class APIs {
               time: tmpMap['time'] as String,
               identifynumber: tmpMap['identifynumber'] as String,
               id: tmpMap['id'],
-              money: tmpMap['totalmoney']);
+              totalMoney: tmpMap['totalmoney'],
+              resultMoney: tmpMap['resultmoney']
+          );
+          print(orderItem.resultMoney);
+          print('--=-=--=-=-=-=-=-=-=\n');
           orders.add(orderItem);
         }
         final detailInifo = CustomerDetail(
@@ -204,7 +208,8 @@ class APIs {
             time: tmpMap['time'] as String,
             identifynumber: tmpMap['identifynumber'] as String,
             id: tmpMap['id'],
-            money: tmpMap['totalmoney'],
+            totalMoney: tmpMap['totalmoney'],
+            resultMoney: tmpMap['resultmoney'],
             customerName: tmpMap['customername']
           );
           orders.add(orderItem);

@@ -6,7 +6,8 @@ class OrderListItem {
   String time;
   String identifynumber;
   String id;
-  String money;
+  String totalMoney;
+  String resultMoney;
   String customerName;
   bool isSelect = false; // 编辑状态下的标记
 
@@ -21,5 +22,5 @@ class OrderListItem {
     }
   }
   OrderListItem({this.orderstatus, this.hasPay, this.time, this.identifynumber, this.id,
-                  this.money, this.customerName});
+                  this.totalMoney, this.resultMoney, this.customerName});
 }

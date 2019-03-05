@@ -232,7 +232,7 @@ class CustomersOrderListView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text('¥' + order.money,
+                Text('¥' + order.resultMoney,
                     style: order.hasPay ?
                     Styles.overlineNormal(20, Colors.white) : Styles.normalFont(20, Colors.white)),
                 const SizedBox(width: 30),

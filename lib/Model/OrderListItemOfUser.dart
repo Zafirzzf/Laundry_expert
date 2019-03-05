@@ -6,8 +6,9 @@ class OrderListItemOfUser {
   String time;
   String identifynumber;
   String id;
-  String money;
-  OrderListItemOfUser({this.orderstatus, this.hasPay, this.identifynumber, this.time, this.id, this.money});
+  String totalMoney;
+  String resultMoney;
+  OrderListItemOfUser({this.orderstatus, this.hasPay, this.identifynumber, this.time, this.id, this.totalMoney, this.resultMoney});
 
   String stateString() {
     switch (orderstatus) {
