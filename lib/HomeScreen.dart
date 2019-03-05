@@ -139,11 +139,11 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('导入会员信息'),
             onTap: _clickAddVipCustomerInfo,
           ),
-          ListTile(
-            leading: Icon(Icons.date_range),
-            title: Text('按日期查找订单'),
-            onTap: _clickSearchOrdersByDate,
-          ),
+//          ListTile(
+//            leading: Icon(Icons.date_range),
+//            title: Text('按日期查找订单'),
+//            onTap: _clickSearchOrdersByDate,
+//          ),
           ListTile(
             leading: Icon(Icons.refresh),
             title: Text('重新登录'),

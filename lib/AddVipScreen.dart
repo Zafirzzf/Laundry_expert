@@ -57,11 +57,14 @@ class _AddVipScreenState extends State<AddVipScreen> {
           name: _nameInputController.text,
           money: _moneyInputController.text,
           discount: _discountInputController.text,
-          successCallback: () {
-//            Customer.appenNewCustomer(Customer(
-//              name: _nameInputController.text,
-//              phoneNum: _phoneInputController.text
-//            ));
+          customerIdCallback: (id) {
+            if (Customer.loadedData()) {
+              Customer.appenNewCustomer(Customer(
+                  name: _nameInputController.text,
+                  phoneNum: _phoneInputController.text,
+                  id: id
+              ));
+            }
             LoadingDialog.hide(context);
             BottomSheetDialog(text: '添加成功', context: context).show();
             _phoneInputController.clear();

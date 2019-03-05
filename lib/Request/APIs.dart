@@ -296,13 +296,13 @@ class APIs {
   }
 
   // 导入会员信息
-  static importVipCustomerInfo({String phone, String name, String money, String discount, VoidCallback successCallback, ErrorCallback errorCallback}) {
+  static importVipCustomerInfo({String phone, String name, String money, String discount, StringCallback customerIdCallback, ErrorCallback errorCallback}) {
     final path = 'importcustomer.action';
     RequestManager.post(
       urlPath: path,
       parame: {'telephone': phone, 'customername': name, 'money': money, 'discountnum': discount},
       dataCallback: (dataMap) {
-        successCallback();
+        customerIdCallback(dataMap['customerid']);
       },
       errorCallback: errorCallback
     );
