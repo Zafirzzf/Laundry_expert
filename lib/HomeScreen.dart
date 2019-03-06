@@ -133,7 +133,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          const DrawerHeader(child: Center(child: Text('洗衣专家'))),
+          DrawerHeader(
+              child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Image.asset("Images/ic_launcher.png"),
+                      const SizedBox(height: 15),
+                      Text('洗衣专家')
+                    ],
+                  )
+              )
+          ),
           ListTile(
             leading: Icon(Icons.person_add),
             title: Text('导入会员信息'),
